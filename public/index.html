@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C4 App - Gestão Financeira</title>
+    
+    <!-- Google Fonts: Poppins & Open Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Feather Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+
+
+    <style>
+        /* ---------------------------------- */
+        /* 1. CONFIGURAÇÃO GLOBAL E VARIÁVEIS */
+        /* ---------------------------------- */
+        :root {
+            --rosa-principal: #db1472;
+            --dourado: #f8b81f;
+            --verde-sucesso: #22c55e;
+            --vermelho-erro: #ef4444;
+            --alerta-estoque: #f97316;
+            --fundo-claro: #fdf8f9;
+            --texto-escuro: #1f2937;
+            --texto-claro: #6b7280;
+            --branco: #ffffff;
+            --cinza-borda: #e5e7eb;
+            --sombra: 0 8px 25px rgba(219, 20, 114, 0.1);
+            --raio-borda: 1rem;
+            --transicao-suave: all 0.3s ease-in-out;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--fundo-claro);
+            color: var(--texto-escuro);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1, h2, h3, h4, h5, h6, .header-title, .logo { font-family: 'Poppins', sans-serif; font-weight: 700; }
+        .page-hidden, .view-hidden { display: none !important; }
+
+        /* ---------------------------------- */
+        /* 2. MENU E NAVEGAÇÃO              */
+        /* ---------------------------------- */
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); opacity: 0; visibility: hidden; transition: var(--transicao-suave); z-index: 999; }
+        #side-menu { position: fixed; top: 0; left: 0; height: 100%; width: 280px; background-color: var(--branco); transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1000; display: flex; flex-direction: column; padding: 1.5rem; }
+        .menu-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 2.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--cinza-borda); }
+        .menu-header .logo { font-size: 1.5rem; font-weight: 800; background: linear-gradient(45deg, var(--rosa-principal), var(--dourado)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-fill-color: transparent; }
+        .menu-nav ul { list-style: none; }
+        .menu-nav li a { display: flex; align-items: center; gap: 1rem; padding: 1rem 0.75rem; text-decoration: none; color: var(--texto-claro); font-weight: 600; border-radius: 0.5rem; transition: var(--transicao-suave); }
+        .menu-nav li a:hover { background-color: var(--fundo-claro); color: var(--rosa-principal); }
+        .menu-nav li.active a { background-color: var(--rosa-principal); color: var(--branco); box-shadow: 0 4px 15px rgba(219, 20, 114, 0.25); }
+        .menu-nav li.active a i { color: var(--branco) !important; }
+        body.menu-open #side-menu { transform: translateX(0); }
+        body.menu-open .overlay { opacity: 1; visibility: visible; }
+        
+        /* ---------------------------------- */
+        /* 3. CONTEÚDO PRINCIPAL (APP)      */
+        /* ---------------------------------- */
+        .app-container { padding: 1.5rem; }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        #menu-toggle { background: none; border: none; cursor: pointer; color: var(--texto-escuro); }
+        .header-title { font-size: 1.25rem; font-weight: 700; color: var(--rosa-principal); }
+
+        /* ---------------------------------- */
+        /* 4. ESTILOS COMPARTILHADOS        */
+        /* ---------------------------------- */
+        .card { background-color: var(--branco); padding: 1.5rem; border-radius: var(--raio-borda); box-shadow: var(--sombra); transition: var(--transicao-suave); display: flex; flex-direction: column; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 12px 30px rgba(219, 20, 114, 0.15); }
+        .section-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--rosa-principal); }
+        .card-info { font-size: 0.8rem; color: var(--texto-claro); margin-bottom: 1.5rem; line-height: 1.4; }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; font-size: 0.9rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--texto-escuro); }
+        .form-group input, .form-group select { width: 100%; padding: 0.85rem; border-radius: 0.5rem; border: 1px solid var(--cinza-borda); font-family: 'Open Sans', sans-serif; font-size: 1rem; transition: var(--transicao-suave); }
+        .form-group input:focus { border-color: var(--rosa-principal); box-shadow: 0 0 0 3px rgba(219, 20, 114, 0.2); outline: none; }
+        .input-group { display: flex; gap: 0.5rem; }
+        .input-group select { flex-basis: 80px; }
+        .input-group input { flex-grow: 1; }
+        .btn { display: flex; align-items: center; justify-content: center; gap: 0.5rem; width: 100%; padding: 0.875rem; border: none; border-radius: 0.5rem; font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 1rem; cursor: pointer; transition: var(--transicao-suave); color: var(--branco); background: linear-gradient(90deg, var(--rosa-principal), var(--dourado)); }
+        .btn:hover { transform: scale(1.02); box-shadow: 0 4px 15px rgba(219, 20, 114, 0.3); }
+        .btn-secondary { background: var(--texto-claro); }
+        .fab { position: fixed; bottom: 2rem; right: 2rem; width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(45deg, var(--rosa-principal), var(--dourado)); color: var(--branco); display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 25px rgba(219, 20, 114, 0.3); border: none; cursor: pointer; transition: var(--transicao-suave); z-index: 99; }
+        .fab:hover { transform: scale(1.1); box-shadow: 0 12px 30px rgba(219, 20, 114, 0.4); }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1001; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: var(--transicao-suave); }
+        .modal-overlay.visible { opacity: 1; visibility: visible; }
+        .modal-content { background: var(--branco); padding: 2rem; border-radius: var(--raio-borda); width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto;}
+        
+        /* ---------------------------------- */
+        /* 5. PÁGINA DE DASHBOARD           */
+        /* ---------------------------------- */
+        .greeting h1 { font-size: 1.8rem; font-weight: 800; }
+        .metrics-grid { display: grid; gap: 1rem; margin-top: 2rem; grid-template-columns: 1fr 1fr; }
+        .card-icon { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; background: linear-gradient(45deg, var(--rosa-principal), var(--dourado)); color: var(--branco); }
+        .card-icon i { stroke-width: 2.5; }
+        .card-title { font-size: 0.875rem; color: var(--texto-claro); font-weight: 700; font-family: 'Poppins', sans-serif;}
+        .card-value { font-size: 1.8rem; font-weight: 800; margin-top: 0.25rem; }
+        .card-progress-bar { width: 100%; height: 6px; background-color: #f3f4f6; border-radius: 3px; margin-top: 0.5rem; overflow: hidden; }
+        .card-progress { height: 100%; background: linear-gradient(90deg, var(--rosa-principal), var(--dourado)); border-radius: 3px; }
+
+        /* ---------------------------------- */
+        /* 6. PÁGINA DE DESPESAS            */
+        /* ---------------------------------- */
+        .despesas-grid { display: grid; gap: 1.5rem; grid-template-columns: 1fr; }
+        .despesa-item-container { margin-top: 1rem; flex-grow: 1; }
+        .despesa-item { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px solid var(--cinza-borda); font-size: 1rem; font-weight: 600; }
+        .delete-btn { background: none; border: none; color: #ef4444; cursor: pointer; padding: 0.25rem; }
+        .total-display { margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--cinza-borda); font-weight: 700; font-size: 1.1rem; }
+        .resultado-card p { font-size: 2rem; font-weight: 800; color: var(--texto-escuro); }
+        #donut-chart-container { position: relative; width: 100%; max-width: 250px; margin: 1.5rem auto 0; }
+        
+        /* ---------------------------------- */
+        /* 7. PÁGINA DE PRODUTOS            */
+        /* ---------------------------------- */
+        #page-produtos .form-card { background: linear-gradient(180deg, var(--fundo-claro) 0%, var(--branco) 100%); }
+        #image-preview { width: 120px; height: 120px; border-radius: var(--raio-borda); object-fit: cover; border: 3px dashed var(--cinza-borda); margin-top: 0.5rem; cursor: pointer; transition: var(--transicao-suave); }
+        #image-preview:hover { border-color: var(--rosa-principal); }
+        .form-row { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+        #produto-variacoes-container { display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem; }
+        .variacao-item { display: flex; gap: 1rem; align-items: center; }
+        .calculation-box { background-color: var(--branco); border: 2px solid var(--fundo-claro); padding: 1.5rem; border-radius: 0.75rem; margin-top: 1.5rem; box-shadow: var(--sombra); }
+        .calc-row { display: flex; justify-content: space-between; align-items: center; font-size: 1rem; padding: 0.75rem 0; }
+        .calc-row span, .calc-row label { font-weight: 600; }
+        .calc-row strong { font-weight: 700; }
+        .calc-row.total { font-weight: 800; font-family: 'Poppins'; border-top: 2px solid var(--cinza-borda); margin-top: 0.5rem; padding-top: 0.75rem; font-size: 1.1rem; }
+        .calc-row.final-price { font-size: 1.3rem; color: var(--rosa-principal); }
+        .produtos-grid { display: grid; gap: 1.5rem; grid-template-columns: 1fr; }
+        .produto-card { padding: 0; overflow: hidden; }
+        .produto-card img { width: 100%; height: 180px; object-fit: cover; }
+        .produto-card-content { padding: 1.5rem; }
+        .produto-card-header { display: flex; justify-content: space-between; align-items: flex-start; }
+        .produto-card h4 { font-weight: 700; margin-bottom: 0.5rem; font-size: 1.1rem; }
+        .produto-badge { font-size: 0.75rem; font-weight: 700; padding: 0.25rem 0.6rem; border-radius: 99px; color: var(--branco); margin-left: 0.5rem; white-space: nowrap; }
+        .badge-estoque { background-color: var(--alerta-estoque); }
+        .produto-card-info { display: flex; justify-content: space-between; font-size: 1rem; font-weight: 600; margin: 0.75rem 0; }
+        .produto-card-actions { display: flex; gap: 0.5rem; margin-top: 1rem; border-top: 1px solid var(--cinza-borda); padding-top: 1rem; }
+        .produto-card-actions .btn { width: 50%; padding: 0.6rem; font-size: 0.9rem; font-weight: 700; }
+        .btn-excluir { background: var(--cinza-borda); color: var(--texto-escuro); }
+
+        /* ---------------------------------- */
+        /* 8. PÁGINA DE FLUXO DE CAIXA      */
+        /* ---------------------------------- */
+        .fluxo-grid { display: grid; gap: 1.5rem; grid-template-columns: 1fr; }
+        .filtro-periodo { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
+        .filtro-btn { padding: 0.5rem 1rem; border: 1px solid var(--cinza-borda); background-color: var(--branco); color: var(--texto-claro); border-radius: 99px; font-weight: 600; cursor: pointer; transition: var(--transicao-suave); }
+        .filtro-btn.active { background-color: var(--rosa-principal); color: var(--branco); border-color: var(--rosa-principal); }
+        .saldo-positivo { color: var(--verde-sucesso); }
+        .saldo-negativo { color: var(--vermelho-erro); }
+        .lancamento-lista { list-style: none; margin-top: 1rem; }
+        .lancamento-item { display: flex; justify-content: space-between; padding: 0.75rem; border-radius: 0.5rem; margin-bottom: 0.5rem; }
+        .lancamento-item.entrada { background-color: #f0fdf4; }
+        .lancamento-item.saida { background-color: #fef2f2; }
+        .lancamento-item span { font-weight: 600; }
+        .lancamento-item strong { color: var(--texto-escuro); }
+
+        /* ---------------------------------- */
+        /* 9. PÁGINA DE VENDAS             */
+        /* ---------------------------------- */
+        .vendas-grid { display: grid; gap: 1.5rem; grid-template-columns: 1fr; margin-bottom: 1.5rem; }
+        .destaques-estoque-grid { display: grid; gap: 1.5rem; grid-template-columns: 1fr; margin-bottom: 1.5rem; }
+        .destaque-card { padding: 1rem; border-left: 5px solid; }
+        .destaque-card.baixo { border-color: var(--alerta-estoque); }
+        .destaque-card.vendido { border-color: var(--verde-sucesso); }
+        .destaque-card h4 { font-size: 1rem; margin-bottom: 0.5rem; }
+        .destaque-card p { font-size: 0.9rem; font-weight: 600; }
+        .pedidos-lista { display: flex; flex-direction: column; gap: 1rem; }
+        .pedido-card { padding: 1rem; }
+        .pedido-header { display: flex; justify-content: space-between; align-items: center; font-weight: 700; margin-bottom: 0.5rem; }
+        .pedido-status { font-size: 0.8rem; font-weight: 700; padding: 0.25rem 0.6rem; border-radius: 99px; color: var(--branco); }
+        .status-pago { background-color: var(--verde-sucesso); }
+        .status-pendente { background-color: var(--dourado); }
+        .status-enviado { background-color: var(--texto-claro); }
+        .pedido-body { font-size: 0.9rem; }
+        .pedido-footer { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--cinza-borda); display: flex; justify-content: space-between; align-items: center; }
+        .pedido-footer strong { font-size: 1.1rem; }
+        #pedido-itens-lista { list-style: none; margin-top: 1rem; }
+        #pedido-itens-lista li { display: flex; justify-content: space-between; padding: 0.5rem 0; }
+
+        /* ---------------------------------- */
+        /* 10. RESPONSIVIDADE                 */
+        /* ---------------------------------- */
+        @media (min-width: 768px) {
+            .metrics-grid { grid-template-columns: repeat(4, 1fr); }
+            .despesas-grid, .produtos-grid { grid-template-columns: repeat(2, 1fr); }
+            .vendas-grid, .destaques-estoque-grid { grid-template-columns: repeat(3, 1fr); }
+            .fluxo-grid { grid-template-columns: repeat(3, 1fr); }
+            .fluxo-grid .card:nth-child(4) { grid-column: span 3; }
+            .fluxo-lancamentos-container { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+            .form-row { grid-template-columns: 1fr 1fr; }
+        }
+        @media (min-width: 1024px) {
+             .despesas-grid, .produtos-grid { grid-template-columns: repeat(3, 1fr); }
+             .fluxo-grid .card:nth-child(5), .fluxo-grid .card:nth-child(6) { grid-column: initial; }
+             .fluxo-grid .card:nth-child(4) { grid-column: span 3; }
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay" id="overlay"></div>
+    <nav id="side-menu">
+        <div class="menu-header"><span class="logo">C4</span></div>
+        <div class="menu-nav">
+            <ul>
+                <li class="active"><a href="#" data-page="dashboard"><i data-feather="grid"></i>Dashboard</a></li>
+                <li><a href="#" data-page="despesas"><i data-feather="arrow-down-circle"></i>Despesas</a></li>
+                <li><a href="#" data-page="produtos"><i data-feather="package"></i>Produtos</a></li>
+                <li><a href="#" data-page="vendas"><i data-feather="shopping-cart"></i>Vendas</a></li>
+                <li><a href="#" data-page="fluxo-de-caixa"><i data-feather="dollar-sign"></i>Fluxo de Caixa</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="app-container">
+        <header>
+            <button id="menu-toggle" aria-label="Abrir menu"><i data-feather="menu" style="width: 28px; height: 28px;"></i></button>
+            <span id="header-title" class="header-title">Dashboard</span>
+            <div style="width: 28px;"></div>
+        </header>
+
+        <!-- PÁGINA DASHBOARD -->
+        <main id="page-dashboard">
+             <section class="greeting">
+                <h1 id="greeting-text">Bom dia, Empreendedora!</h1>
+                <p>Aqui está o resumo do seu negócio hoje.</p>
+            </section>
+            <section class="metrics-grid">
+                <div class="card"><div class="card-icon"><i data-feather="dollar-sign"></i></div><p class="card-title">Vendas Hoje</p><h2 class="card-value" id="vendas-hoje">R$ 0,00</h2></div>
+                <div class="card"><div class="card-icon"><i data-feather="box"></i></div><p class="card-title">Produtos Vendidos</p><h2 class="card-value" id="produtos-vendidos">0</h2></div>
+                <div class="card"><div class="card-icon"><i data-feather="check-circle"></i></div><p class="card-title">Meta Mensal</p><h2 class="card-value" id="meta-mensal">R$ 0,00</h2> <div class="card-progress-bar"><div id="meta-progress" class="card-progress"></div></div></div>
+                <div class="card"><div class="card-icon"><i data-feather="trending-up"></i></div><p class="card-title">Lucro Líquido (mês)</p><h2 class="card-value" id="lucro-liquido">R$ 0,00</h2></div>
+            </section>
+        </main>
+        
+        <!-- PÁGINA DESPESAS -->
+        <main id="page-despesas" class="page-hidden">
+             <div class="despesas-grid">
+                <div class="card">
+                    <h3 class="section-title">Custos Fixos</h3><p class="card-info">Despesas que não mudam, independente da produção ou vendas (ex: aluguel, salários).</p>
+                    <form id="form-custo-fixo"><div class="form-group"><label for="nome-custo-fixo">Nome</label><input type="text" id="nome-custo-fixo" required></div><div class="form-group"><label for="valor-custo-fixo">Valor (R$)</label><input type="number" step="0.01" id="valor-custo-fixo" required></div><button type="submit" class="btn">Adicionar</button></form>
+                    <div class="despesa-item-container" id="lista-custos-fixos"></div><div class="total-display">Total Fixo: <span id="total-fixo">R$ 0,00</span></div>
+                </div>
+                <div class="card">
+                    <h3 class="section-title">Custos Variáveis</h3><p class="card-info">Custos como comissões (%). O percentual é calculado sobre o subtotal de custos fixos e fretes.</p>
+                    <form id="form-custo-variavel">
+                        <div class="form-group"><label for="nome-custo-variavel">Nome</label><input type="text" id="nome-custo-variavel" required></div>
+                        <div class="form-group"><label for="valor-custo-variavel">Valor</label>
+                            <div class="input-group">
+                                <select id="tipo-custo-variavel"><option value="reais">R$</option><option value="porcentagem">%</option></select>
+                                <input type="number" step="0.01" id="valor-custo-variavel" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn">Adicionar</button>
+                    </form>
+                    <div class="despesa-item-container" id="lista-custos-variaveis"></div><div class="total-display">Total Variável: <span id="total-variavel">R$ 0,00</span></div>
+                </div>
+                <div class="card">
+                    <h3 class="section-title">Frete</h3><p class="card-info">Soma dos fretes do mês. O valor será diluído na sua estimativa de vendas.</p>
+                    <form id="form-frete"><div class="form-group"><label for="valor-frete-total">Valor Total dos Fretes (R$)</label><input type="number" step="0.01" id="valor-frete-total" value="0"></div></form>
+                    <div class="total-display">Total Frete: <span id="total-frete">R$ 0,00</span></div>
+                </div>
+                <div class="card">
+                    <h3 class="section-title">Simulação Mensal</h3><p class="card-info">Informe sua meta de vendas para diluir os custos e encontrar o custo unitário.</p>
+                    <form id="form-simulacao"><div class="form-group"><label for="vendas-estimadas">Estimativa de Vendas (unidades/mês)</label><input type="number" id="vendas-estimadas" value="100"></div></form>
+                </div>
+                <div class="card">
+                     <h3 class="section-title">Imposto</h3><p class="card-info">Percentual aplicado sobre o subtotal de todos os outros custos.</p>
+                    <form id="form-imposto"><div class="form-group"><label for="tipo-imposto">Tipo</label><select id="tipo-imposto"><option>Simples Nacional</option><option>MEI</option><option>Outro</option></select></div><div class="form-group"><label for="percentual-imposto">Porcentagem (%)</label><input type="number" step="0.1" id="percentual-imposto" value="4.5"></div></form>
+                    <div class="total-display">Valor do Imposto: <span id="valor-imposto">R$ 0,00</span></div>
+                </div>
+                <div class="card resultado-card">
+                    <h3 class="section-title">Custo Unitário (Despesas)</h3><p id="custo-total-unitario-despesas">R$ 0,00</p>
+                    <div id="donut-chart-container"><canvas id="despesas-chart"></canvas></div>
+                </div>
+            </div>
+        </main>
+
+        <!-- PÁGINA PRODUTOS -->
+        <main id="page-produtos" class="page-hidden">
+            <div id="view-lista-produtos">
+                <h3 class="section-title" style="margin-bottom: 1.5rem;">Meus Produtos</h3>
+                <div id="produtos-grid" class="produtos-grid"></div>
+                <p id="sem-produtos-msg" class="view-hidden">Você ainda não tem produtos cadastrados. Clique no botão '+' para começar!</p>
+                <button id="btn-novo-produto" class="fab" aria-label="Adicionar novo produto"><i data-feather="plus"></i></button>
+            </div>
+            <div id="view-form-produto" class="view-hidden">
+                <div class="card form-card">
+                    <h3 id="form-produto-title" class="section-title">Cadastrar Novo Produto</h3>
+                    <form id="form-produto">
+                        <input type="hidden" id="produto-id">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="produto-nome">Nome do Produto</label><input type="text" id="produto-nome" required>
+                                <label>Variações (Tamanho, Cor, etc.)</label>
+                                <div id="produto-variacoes-container"></div>
+                                <button type="button" id="btn-add-variacao" class="btn btn-secondary" style="margin-top: 0.5rem;">+ Add Variação</button>
+                            </div>
+                             <div class="form-group" style="text-align: center;">
+                                <label>Imagem do Produto</label>
+                                <label for="produto-imagem">
+                                  <img id="image-preview" src="https://placehold.co/120x120/fdf8f9/db1472?text=Clique" alt="Pré-visualização">
+                                </label>
+                                <input type="file" id="produto-imagem" accept="image/*" style="display: none;">
+                            </div>
+                        </div>
+                        <div class="calculation-box">
+                            <h4 style="font-weight: 700; text-align: center; margin-bottom: 1rem;">Calculadora de Preço</h4>
+                            <div class="calc-row"><label for="produto-custo">1. Custo de Aquisição (R$)</label><input type="number" step="0.01" id="produto-custo" required style="width: 120px; text-align: right;"></div>
+                            <div class="calc-row"><span>(+) Custo Unitário (Despesas)</span><strong id="custo-despesas-display">R$ 0,00</strong></div>
+                            <div class="calc-row total"><span>(=) Custo Total do Produto</span><strong id="custo-total-display">R$ 0,00</strong></div>
+                            <div class="calc-row" style="margin-top: 1rem;"><label for="produto-margem">2. Margem de Lucro (%)</label><input type="number" id="produto-margem" value="100" style="width: 120px; text-align: right;"></div>
+                            <div class="calc-row total final-price"><span>(=) Preço de Venda Sugerido</span><strong id="preco-sugerido-display">R$ 0,00</strong></div>
+                        </div>
+                        <br>
+                        <button type="submit" class="btn">Salvar Produto</button>
+                        <button type="button" id="btn-voltar-lista" class="btn btn-secondary" style="margin-top: 0.5rem;">Voltar para a Lista</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+        
+        <!-- PÁGINA FLUXO DE CAIXA -->
+        <main id="page-fluxo-de-caixa" class="page-hidden">
+            <div class="filtro-periodo" id="fluxo-filtro-periodo">
+                <button class="filtro-btn active" data-periodo="mes">Mês</button>
+                <button class="filtro-btn" data-periodo="semana">Semana</button>
+                <button class="filtro-btn" data-periodo="hoje">Hoje</button>
+            </div>
+            <div class="fluxo-grid">
+                <div class="card"><p class="card-title">Total Entradas</p><h2 id="total-entradas" class="card-value saldo-positivo">R$ 0,00</h2></div>
+                <div class="card"><p class="card-title">Total Saídas</p><h2 id="total-saidas" class="card-value saldo-negativo">R$ 0,00</h2></div>
+                <div class="card"><p class="card-title">Saldo do Período</p><h2 id="saldo-total" class="card-value">R$ 0,00</h2></div>
+                
+                <div class="card fluxo-lancamentos-container">
+                    <div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h3 class="section-title">Entradas</h3>
+                            <button id="btn-nova-entrada" class="btn" style="width: auto; padding: 0.5rem 1rem; font-size: 0.8rem;">+ Nova</button>
+                        </div>
+                        <ul id="lista-entradas" class="lancamento-lista"></ul>
+                    </div>
+                     <div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h3 class="section-title">Saídas</h3>
+                            <button id="btn-nova-saida" class="btn btn-secondary" style="width: auto; padding: 0.5rem 1rem; font-size: 0.8rem;">+ Nova</button>
+                        </div>
+                        <ul id="lista-saidas" class="lancamento-lista"></ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                     <h3 class="section-title">Movimentação no Período</h3>
+                     <canvas id="fluxo-bar-chart"></canvas>
+                </div>
+                 <div class="card">
+                     <h3 class="section-title">Composição das Saídas</h3>
+                     <canvas id="saidas-pie-chart"></canvas>
+                </div>
+            </div>
+        </main>
+        
+        <!-- PÁGINA DE VENDAS -->
+        <main id="page-vendas" class="page-hidden">
+            <div class="vendas-grid">
+                <div class="card"><p class="card-title">Pedidos no Mês</p><h2 id="vendas-total-pedidos" class="card-value">0</h2></div>
+                <div class="card"><p class="card-title">Faturamento Bruto</p><h2 id="vendas-faturamento-bruto" class="card-value">R$ 0,00</h2></div>
+                <div class="card"><p class="card-title">Item Mais Vendido</p><h2 id="vendas-item-mais-vendido" class="card-value" style="font-size: 1.3rem;">-</h2></div>
+            </div>
+            
+            <h3 class="section-title">Destaques do Estoque</h3>
+            <div class="destaques-estoque-grid">
+                <div id="destaque-estoque-baixo" class="card destaque-card baixo"><h4 class="card-title">Estoque Baixo</h4><p>-</p></div>
+                <div id="destaque-mais-vendidos" class="card destaque-card vendido"><h4 class="card-title">Top 3 Mais Vendidos</h4><p>-</p></div>
+                <div id="destaque-encalhados" class="card destaque-card baixo" style="border-color: var(--vermelho-erro);"><h4 class="card-title">Parados há 30+ dias</h4><p>-</p></div>
+            </div>
+
+            <h3 class="section-title" style="margin-top: 2rem;">Pedidos Recentes</h3>
+             <div class="filtro-periodo" id="vendas-filtro-periodo">
+                <button class="filtro-btn active" data-periodo="mes">Mês</button>
+                <button class="filtro-btn" data-periodo="semana">Semana</button>
+                <button class="filtro-btn" data-periodo="hoje">Hoje</button>
+            </div>
+            <div id="pedidos-lista" class="pedidos-lista"></div>
+            <p id="sem-pedidos-msg" class="view-hidden">Nenhum pedido encontrado para o período.</p>
+
+            <button id="btn-novo-pedido" class="fab"><i data-feather="plus"></i></button>
+        </main>
+    </div>
+
+    <!-- Modal Novo Pedido -->
+    <div id="modal-novo-pedido" class="modal-overlay">
+        <div class="modal-content">
+            <h3 class="section-title">Novo Pedido</h3>
+            <form id="form-novo-pedido">
+                 <div class="form-group">
+                    <label for="pedido-select-cliente">Cliente</label>
+                    <select id="pedido-select-cliente"></select>
+                </div>
+                <div id="novo-cliente-fields" class="view-hidden">
+                    <div class="form-group"><label for="pedido-cliente-nome">Nome do Novo Cliente</label><input type="text" id="pedido-cliente-nome"></div>
+                    <div class="form-group"><label for="pedido-cliente-telefone">Telefone</label><input type="tel" id="pedido-cliente-telefone"></div>
+                </div>
+                <div class="form-group"><label>Produtos</label>
+                    <div class="input-group">
+                        <select id="select-produto-pedido"></select>
+                        <select id="select-variacao-pedido" class="view-hidden"></select>
+                        <input type="number" id="input-qtd-produto" placeholder="Qtd" min="1" value="1" style="max-width: 80px;">
+                        <button type="button" id="btn-add-produto-pedido" class="btn" style="width: auto; padding: 0.5rem 1rem;">Add</button>
+                    </div>
+                </div>
+                <ul id="pedido-itens-lista"></ul>
+                <div class="form-group"><label for="pedido-status">Status</label><select id="pedido-status"><option value="pago">Pago</option><option value="pendente">Pendente</option><option value="enviado">Enviado</option></select></div>
+                <div class="total-display" style="text-align: right; font-size: 1.5rem;">Total: <span id="pedido-total">R$ 0,00</span></div>
+                <br>
+                <button type="submit" class="btn">Salvar Pedido</button>
+                <button type="button" id="btn-fechar-modal-pedido" class="btn btn-secondary" style="margin-top: 0.5rem;">Cancelar</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Modal Detalhes do Pedido -->
+    <div id="modal-detalhes-pedido" class="modal-overlay">
+        <div class="modal-content">
+            <h3 class="section-title">Detalhes do Pedido</h3>
+            <div id="detalhes-pedido-content"></div>
+            <div class="produto-card-actions">
+                <button id="btn-excluir-pedido" class="btn btn-excluir">Excluir Pedido</button>
+                <button id="btn-editar-pedido" class="btn">Editar Pedido</button>
+            </div>
+             <button type="button" id="btn-fechar-modal-detalhes" class="btn btn-secondary" style="margin-top: 0.5rem;">Fechar</button>
+        </div>
+    </div>
+
+    <!-- Modal para novos lançamentos -->
+    <div id="modal-lancamento" class="modal-overlay">
+        <div class="modal-content">
+            <h3 id="modal-title" class="section-title">Novo Lançamento</h3>
+            <form id="form-lancamento">
+                <input type="hidden" id="lancamento-tipo">
+                <div class="form-group"><label for="lancamento-descricao">Descrição</label><input type="text" id="lancamento-descricao" required></div>
+                <div class="form-group"><label for="lancamento-valor">Valor (R$)</label><input type="number" step="0.01" id="lancamento-valor" required></div>
+                <div class="form-group"><label for="lancamento-data">Data</label><input type="date" id="lancamento-data" required></div>
+                <button type="submit" class="btn">Salvar</button>
+                <button type="button" id="btn-fechar-modal" class="btn btn-secondary" style="margin-top: 0.5rem;">Cancelar</button>
+            </form>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const C4_DATA_KEY = 'c4_app_data_v14';
+            let appData = {
+                dashboard: { vendasHoje: 1450.75, produtosVendidos: 32, metaMensal: { atingido: 12500.40, total: 20000.00 }, lucroLiquido: 450.30 },
+                despesas: { fixos: [], variaveis: [], frete: 0, imposto: { tipo: 'Simples Nacional', porcentagem: 4.5 }, vendasEstimadas: 100 },
+                produtos: [],
+                clientes: [],
+                fluxoDeCaixa: { lancamentos: [] },
+                vendas: []
+            };
+            
+            let currentPedidoItens = [];
+            let fluxoBarChart, saidasPieChart, despesasChart;
+            let currentImageBase64 = null;
+            let pedidoEmEdicaoId = null;
+
+            function saveData() { localStorage.setItem(C4_DATA_KEY, JSON.stringify(appData)); }
+            function loadData() {
+                const data = localStorage.getItem(C4_DATA_KEY);
+                if (data) { appData = JSON.parse(data); } 
+                else { saveData(); }
+                if (!appData.vendas) appData.vendas = [];
+                if (!appData.fluxoDeCaixa) appData.fluxoDeCaixa = { lancamentos: [] };
+                if (!appData.despesas) appData.despesas = { fixos: [], variaveis: [], frete: 0, imposto: { tipo: 'Simples Nacional', porcentagem: 4.5 }, vendasEstimadas: 100 };
+                if (!appData.produtos) appData.produtos = [];
+                if (!appData.clientes) appData.clientes = [];
+            }
+
+            const formatCurrency = (value) => (value || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+            const menuToggle = document.getElementById('menu-toggle');
+            const overlay = document.getElementById('overlay');
+            const navLinks = document.querySelectorAll('.menu-nav a');
+            const headerTitle = document.getElementById('header-title');
+
+            function switchPage(pageId = 'dashboard') {
+                document.querySelectorAll('main').forEach(page => page.classList.add('page-hidden'));
+                const newPage = document.getElementById(`page-${pageId.replace(/_/g, '-')}`);
+                if (newPage) newPage.classList.remove('page-hidden');
+                navLinks.forEach(link => { link.parentElement.classList.remove('active'); });
+                const activeLink = document.querySelector(`.menu-nav a[data-page="${pageId.replace(/_/g, '-')}"]`);
+                if(activeLink) {
+                    activeLink.parentElement.classList.add('active');
+                    headerTitle.textContent = activeLink.textContent;
+                }
+                if (document.body.classList.contains('menu-open')) toggleMenu();
+                
+                const renderFunctions = {
+                    'dashboard': renderDashboard,
+                    'despesas': calculateAllDespesas,
+                    'produtos': renderProdutos,
+                    'fluxo_de_caixa': renderFluxoDeCaixa,
+                    'vendas': renderPaginaVendas,
+                };
+                if(renderFunctions[pageId.replace(/-/g, '_')]) renderFunctions[pageId.replace(/-/g, '_')]();
+            }
+            function toggleMenu() { document.body.classList.toggle('menu-open'); }
+            
+            function renderDashboard() {
+                const data = appData.dashboard;
+                document.getElementById('vendas-hoje').textContent = formatCurrency(data.vendasHoje);
+                document.getElementById('produtos-vendidos').textContent = data.produtosVendidos;
+                document.getElementById('meta-mensal').textContent = formatCurrency(data.metaMensal.atingido);
+                document.getElementById('lucro-liquido').textContent = formatCurrency(data.lucroLiquido);
+                const percentualAtingido = (data.metaMensal.atingido / data.metaMensal.total) * 100;
+                document.getElementById('meta-progress').style.width = `${Math.min(percentualAtingido, 100)}%`;
+                const greetingElement = document.getElementById('greeting-text');
+                const currentHour = new Date().getHours();
+                if (currentHour < 12) greetingElement.textContent = 'Bom dia, Empreendedora!';
+                else if (currentHour < 18) greetingElement.textContent = 'Boa tarde, Empreendedora!';
+                else greetingElement.textContent = 'Boa noite, Empreendedora!';
+            }
+            
+            function calculateDespesasSubtotals() {
+                const { fixos, variaveis, frete, imposto } = appData.despesas;
+                const totalFixo = (fixos || []).reduce((s, i) => s + i.valor, 0);
+                const totalFrete = frete || 0;
+                const baseCalculoPercentual = totalFixo + totalFrete;
+                let totalVariavelReais = 0, totalVariavelPercentual = 0;
+                (variaveis || []).forEach(v => { v.tipo === 'reais' ? totalVariavelReais += v.valor : totalVariavelPercentual += baseCalculoPercentual * (v.valor / 100); });
+                const totalVariavel = totalVariavelReais + totalVariavelPercentual;
+                const subtotal = totalFixo + totalVariavel + totalFrete;
+                const valorImposto = subtotal * ((imposto.porcentagem || 0) / 100);
+                return { totalFixo, totalVariavel, totalFrete, subtotal, valorImposto };
+            }
+            function getDespesasCustoUnitario() {
+                const { subtotal, valorImposto } = calculateDespesasSubtotals();
+                const divisor = appData.despesas.vendasEstimadas > 0 ? appData.despesas.vendasEstimadas : 1;
+                return (subtotal + valorImposto) / divisor;
+            }
+            function calculateAllDespesas() {
+                const { totalFixo, totalVariavel, totalFrete, valorImposto } = calculateDespesasSubtotals();
+                renderDespesaList('fixos', 'lista-custos-fixos', 'total-fixo');
+                renderDespesaList('variaveis', 'lista-custos-variaveis', 'total-variavel');
+                document.getElementById('total-frete').textContent = formatCurrency(totalFrete);
+                document.getElementById('valor-imposto').textContent = formatCurrency(valorImposto);
+                document.getElementById('custo-total-unitario-despesas').textContent = formatCurrency(getDespesasCustoUnitario());
+                saveData();
+                renderDespesasChart({ totalFixo, totalVariavel, totalFrete, valorImposto });
+            }
+            function renderDespesaList(key, containerId, totalId) {
+                const container = document.getElementById(containerId); container.innerHTML = ''; let totalCalculado = 0;
+                const { totalFixo, totalFrete } = calculateDespesasSubtotals();
+                const baseCalculoPercentual = totalFixo + totalFrete;
+                (appData.despesas[key] || []).forEach(item => {
+                    let valorExibido = '', valorCalculado = 0;
+                    if(item.tipo === 'porcentagem') { valorExibido = `${item.valor}%`; valorCalculado = baseCalculoPercentual * (item.valor / 100); } 
+                    else { valorExibido = formatCurrency(item.valor); valorCalculado = item.valor; }
+                    totalCalculado += valorCalculado;
+                    const el = document.createElement('div'); el.className = 'despesa-item';
+                    el.innerHTML = `<span>${item.nome}</span><strong>${valorExibido}</strong><button class="delete-btn" data-id="${item.id}" data-key="${key}"><i data-feather="x-circle"></i></button>`;
+                    container.appendChild(el);
+                });
+                document.getElementById(totalId).textContent = formatCurrency(totalCalculado); feather.replace();
+            }
+            function renderDespesasChart(data) {
+                const ctx = document.getElementById('despesas-chart').getContext('2d');
+                if (despesasChart) despesasChart.destroy();
+                despesasChart = new Chart(ctx, { type: 'doughnut', data: { labels: ['Fixos', 'Variáveis', 'Frete', 'Imposto'], datasets: [{ data: [data.totalFixo, data.totalVariavel, data.totalFrete, data.valorImposto], backgroundColor: ['#db1472', '#f8b81f', '#f472b6', '#fbbf24'], borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } } });
+            }
+            function setupDespesasPage() {
+                document.getElementById('valor-frete-total').value = appData.despesas.frete;
+                document.getElementById('vendas-estimadas').value = appData.despesas.vendasEstimadas;
+                document.getElementById('tipo-imposto').value = appData.despesas.imposto.tipo;
+                document.getElementById('percentual-imposto').value = appData.despesas.imposto.porcentagem;
+                document.getElementById('form-custo-fixo').addEventListener('submit', function(e) { e.preventDefault(); const n=this.querySelector('#nome-custo-fixo').value,v=parseFloat(this.querySelector('#valor-custo-fixo').value);if(n&&v>0){appData.despesas.fixos.push({id:Date.now(),nome:n,valor:v});this.reset();calculateAllDespesas()}});
+                document.getElementById('form-custo-variavel').addEventListener('submit', function(e) { e.preventDefault(); const n=this.querySelector('#nome-custo-variavel').value,t=this.querySelector('#tipo-custo-variavel').value,v=parseFloat(this.querySelector('#valor-custo-variavel').value);if(n&&v>0){appData.despesas.variaveis.push({id:Date.now(),nome:n,valor:v,tipo:t});this.reset();calculateAllDespesas()}});
+                document.getElementById('page-despesas').addEventListener('click', e => { const btn=e.target.closest('.delete-btn');if(btn){const{id,key}=btn.dataset;appData.despesas[key]=appData.despesas[key].filter(i=>i.id!==parseInt(id));calculateAllDespesas()}});
+                document.getElementById('valor-frete-total').addEventListener('input', e=>{appData.despesas.frete=parseFloat(e.target.value)||0;calculateAllDespesas()});
+                document.getElementById('vendas-estimadas').addEventListener('input', e=>{appData.despesas.vendasEstimadas=parseInt(e.target.value)||1;calculateAllDespesas()});
+                document.getElementById('form-imposto').addEventListener('input', ()=>{appData.despesas.imposto.tipo=document.getElementById('tipo-imposto').value;appData.despesas.imposto.porcentagem=parseFloat(document.getElementById('percentual-imposto').value)||0;calculateAllDespesas()});
+            }
+
+            // --- PÁGINA PRODUTOS ---
+            const viewListaProdutos = document.getElementById('view-lista-produtos'), viewFormProduto = document.getElementById('view-form-produto');
+            const fabNovoProduto = document.getElementById('btn-novo-produto'), btnVoltarLista = document.getElementById('btn-voltar-lista');
+            const custoAquisicaoInput = document.getElementById('produto-custo'), margemLucroInput = document.getElementById('produto-margem');
+            const custoDespesasDisplay = document.getElementById('custo-despesas-display'), custoTotalDisplay = document.getElementById('custo-total-display'), precoSugeridoDisplay = document.getElementById('preco-sugerido-display');
+            const formProduto = document.getElementById('form-produto'), produtoImagemInput = document.getElementById('produto-imagem');
+            const imagePreview = document.getElementById('image-preview'), produtosGrid = document.getElementById('produtos-grid');
+            const btnAddVariacao = document.getElementById('btn-add-variacao'), variacoesContainer = document.getElementById('produto-variacoes-container');
+
+            function switchProdutoView(view) { viewListaProdutos.classList.toggle('view-hidden', view === 'form'); viewFormProduto.classList.toggle('view-hidden', view !== 'form'); }
+            function updatePriceCalculationUI() {
+                const custoDespesas = getDespesasCustoUnitario(), custoAquisicao = parseFloat(custoAquisicaoInput.value) || 0;
+                const margemLucro = parseFloat(margemLucroInput.value) || 0, custoTotalProduto = custoAquisicao + custoDespesas;
+                const precoSugerido = custoTotalProduto * (1 + margemLucro / 100);
+                custoDespesasDisplay.textContent = formatCurrency(custoDespesas);
+                custoTotalDisplay.textContent = formatCurrency(custoTotalProduto);
+                precoSugeridoDisplay.textContent = formatCurrency(precoSugerido);
+            }
+            function renderProdutos() {
+                produtosGrid.innerHTML = ''; document.getElementById('sem-produtos-msg').classList.toggle('view-hidden', appData.produtos.length > 0);
+                appData.produtos.forEach(p => {
+                    const card = document.createElement('div'); card.className = 'produto-card card';
+                    const estoqueTotal = (p.variacoes || []).reduce((s, v) => s + v.estoque, 0);
+                    const estoqueBadge = estoqueTotal <= 5 ? `<span class="produto-badge badge-estoque">Estoque Baixo</span>` : '';
+                    card.innerHTML = `<img src="${p.imagemUrl}" alt="${p.nome}"><div class="produto-card-content"><div class="produto-card-header"><h4>${p.nome}</h4>${estoqueBadge}</div><div class="produto-card-info"><span>Estoque Total:</span><strong>${estoqueTotal} un.</strong></div><div class="produto-card-info"><span>Custo Total:</span><strong>${formatCurrency(p.custoTotal)}</strong></div><div class="produto-card-info"><span>Preço Venda:</span><strong>${formatCurrency(p.precoVenda)}</strong></div><div class="produto-card-info"><span>Margem Lucro:</span><strong style="color: var(--verde-sucesso);">${p.margemLucro}%</strong></div><div class="produto-card-actions"><button class="btn btn-excluir" onclick="deleteProduto(${p.id})">Excluir</button><button class="btn" onclick="editProduto(${p.id})">Editar</button></div></div>`;
+                    produtosGrid.appendChild(card);
+                });
+                feather.replace();
+            }
+            function resetProdutoForm() {
+                formProduto.reset(); document.getElementById('produto-id').value = '';
+                variacoesContainer.innerHTML = '';
+                document.getElementById('form-produto-title').textContent = 'Cadastrar Novo Produto';
+                imagePreview.src = "https://placehold.co/120x120/fdf8f9/db1472?text=Clique";
+                currentImageBase64 = null; updatePriceCalculationUI();
+            }
+            function addVariacaoInput(variacao = { nome: '', estoque: 0 }) {
+                const div = document.createElement('div');
+                div.className = 'variacao-item input-group';
+                div.innerHTML = `
+                    <input type="text" class="variacao-nome" placeholder="Ex: Tamanho P, Cor Azul" value="${variacao.nome}" required>
+                    <input type="number" class="variacao-estoque" placeholder="Estoque" value="${variacao.estoque}" min="0" style="max-width: 100px;">
+                    <button type="button" class="delete-btn"><i data-feather="trash-2"></i></button>
+                `;
+                div.querySelector('.delete-btn').onclick = () => div.remove();
+                variacoesContainer.appendChild(div);
+                feather.replace();
+            }
+            function setupProdutosPage() {
+                fabNovoProduto.addEventListener('click', () => { resetProdutoForm(); switchProdutoView('form'); });
+                btnVoltarLista.addEventListener('click', () => switchProdutoView('lista'));
+                btnAddVariacao.addEventListener('click', () => addVariacaoInput());
+                custoAquisicaoInput.addEventListener('input', updatePriceCalculationUI);
+                margemLucroInput.addEventListener('input', updatePriceCalculationUI);
+                produtoImagemInput.addEventListener('change', (e) => { const file = e.target.files[0]; if (file) { const reader = new FileReader(); reader.onloadend = () => { currentImageBase64 = reader.result; imagePreview.src = reader.result; }; reader.readAsDataURL(file); } });
+                formProduto.addEventListener('submit', (e) => {
+                    e.preventDefault(); const id = document.getElementById('produto-id').value;
+                    const custoAquisicao = parseFloat(custoAquisicaoInput.value), margemLucro = parseFloat(margemLucroInput.value);
+                    const custoDespesas = getDespesasCustoUnitario(), custoTotalProduto = custoAquisicao + custoDespesas;
+                    const precoVenda = custoTotalProduto * (1 + margemLucro / 100);
+                    
+                    const variacoes = [...variacoesContainer.querySelectorAll('.variacao-item')].map(v => ({
+                        nome: v.querySelector('.variacao-nome').value,
+                        estoque: parseInt(v.querySelector('.variacao-estoque').value) || 0
+                    })).filter(v => v.nome);
+
+                    const produto = { nome: document.getElementById('produto-nome').value, custoTotal: custoTotalProduto, precoVenda, margemLucro, variacoes, imagemUrl: currentImageBase64 || imagePreview.src };
+                    if (id) { const index = appData.produtos.findIndex(p => p.id == id); appData.produtos[index] = { id: parseInt(id), ...produto }; } 
+                    else { produto.id = Date.now(); appData.produtos.push(produto); }
+                    saveData(); renderProdutos(); switchProdutoView('lista');
+                });
+            }
+            window.editProduto = (id) => {
+                const produto = appData.produtos.find(p => p.id === id); resetProdutoForm();
+                document.getElementById('form-produto-title').textContent = 'Editar Produto';
+                document.getElementById('produto-id').value = produto.id;
+                document.getElementById('produto-nome').value = produto.nome;
+                (produto.variacoes || []).forEach(v => addVariacaoInput(v));
+                const custoAquisicao = produto.custoTotal - getDespesasCustoUnitario();
+                custoAquisicaoInput.value = custoAquisicao > 0 ? custoAquisicao.toFixed(2) : 0;
+                margemLucroInput.value = produto.margemLucro; imagePreview.src = produto.imagemUrl;
+                currentImageBase64 = produto.imagemUrl; updatePriceCalculationUI(); switchProdutoView('form');
+            };
+            window.deleteProduto = (id) => { if (confirm('Tem certeza que deseja excluir este produto?')) { appData.produtos = appData.produtos.filter(p => p.id !== id); saveData(); renderProdutos(); } };
+
+            // --- PÁGINA FLUXO DE CAIXA ---
+            function setupFluxoDeCaixaPage() {
+                const filtroBtns = document.querySelectorAll('#fluxo-filtro-periodo .filtro-btn');
+                filtroBtns.forEach(btn => btn.addEventListener('click', () => { filtroBtns.forEach(b => b.classList.remove('active')); btn.classList.add('active'); renderFluxoDeCaixa(); }));
+                const modal = document.getElementById('modal-lancamento');
+                document.getElementById('btn-nova-entrada').addEventListener('click', () => openModal('entrada'));
+                document.getElementById('btn-nova-saida').addEventListener('click', () => openModal('saida'));
+                document.getElementById('btn-fechar-modal').addEventListener('click', closeModal);
+                modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
+                document.getElementById('form-lancamento').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    appData.fluxoDeCaixa.lancamentos.push({ id: Date.now(), tipo: document.getElementById('lancamento-tipo').value, descricao: document.getElementById('lancamento-descricao').value, valor: parseFloat(document.getElementById('lancamento-valor').value), data: document.getElementById('lancamento-data').value });
+                    saveData(); renderFluxoDeCaixa(); closeModal();
+                });
+            }
+            function renderFluxoDeCaixa() {
+                const activeFilter = document.querySelector('#fluxo-filtro-periodo .filtro-btn.active').dataset.periodo;
+                const now = new Date(); let startDate;
+                if (activeFilter === 'hoje') { startDate = new Date(); startDate.setHours(0, 0, 0, 0); } 
+                else if (activeFilter === 'semana') { startDate = new Date(now.setDate(now.getDate() - now.getDay())); startDate.setHours(0, 0, 0, 0); } 
+                else { startDate = new Date(now.getFullYear(), now.getMonth(), 1); }
+                const lancamentosFiltrados = appData.fluxoDeCaixa.lancamentos.filter(l => new Date(l.data) >= startDate);
+                let totalEntradas = 0, totalSaidas = 0;
+                document.getElementById('lista-entradas').innerHTML = ''; document.getElementById('lista-saidas').innerHTML = '';
+                lancamentosFiltrados.forEach(l => {
+                    const el = document.createElement('li'); el.className = `lancamento-item ${l.tipo}`; el.innerHTML = `<span>${l.descricao}</span><strong>${formatCurrency(l.valor)}</strong>`;
+                    if (l.tipo === 'entrada') { totalEntradas += l.valor; document.getElementById('lista-entradas').appendChild(el); } 
+                    else { totalSaidas += l.valor; document.getElementById('lista-saidas').appendChild(el); }
+                });
+                const saldo = totalEntradas - totalSaidas;
+                document.getElementById('total-entradas').textContent = formatCurrency(totalEntradas);
+                document.getElementById('total-saidas').textContent = formatCurrency(totalSaidas);
+                const saldoEl = document.getElementById('saldo-total');
+                saldoEl.textContent = formatCurrency(saldo); saldoEl.className = 'card-value';
+                if (saldo > 0) saldoEl.classList.add('saldo-positivo'); if (saldo < 0) saldoEl.classList.add('saldo-negativo');
+                renderFluxoCharts(lancamentosFiltrados);
+            }
+            function renderFluxoCharts(lancamentos) {
+                const barCtx = document.getElementById('fluxo-bar-chart').getContext('2d');
+                const pieCtx = document.getElementById('saidas-pie-chart').getContext('2d');
+                const labels = [...new Set(lancamentos.map(l => new Date(l.data).toLocaleDateString('pt-BR')))];
+                const dataEntradas = labels.map(label => lancamentos.filter(l => new Date(l.data).toLocaleDateString('pt-BR') === label && l.tipo === 'entrada').reduce((sum, l) => sum + l.valor, 0));
+                const dataSaidas = labels.map(label => lancamentos.filter(l => new Date(l.data).toLocaleDateString('pt-BR') === label && l.tipo === 'saida').reduce((sum, l) => sum + l.valor, 0));
+                if(fluxoBarChart) fluxoBarChart.destroy();
+                fluxoBarChart = new Chart(barCtx, { type: 'bar', data: { labels, datasets: [{ label: 'Entradas', data: dataEntradas, backgroundColor: 'rgba(34, 197, 94, 0.6)' }, { label: 'Saídas', data: dataSaidas, backgroundColor: 'rgba(239, 68, 68, 0.6)' }] }, options: { scales: { y: { beginAtZero: true } } } });
+                const saidasPorDescricao = lancamentos.filter(l=>l.tipo==='saida').reduce((acc,l)=>{acc[l.descricao]=(acc[l.descricao]||0)+l.valor;return acc;},{});
+                if(saidasPieChart) saidasPieChart.destroy();
+                saidasPieChart = new Chart(pieCtx, { type: 'doughnut', data: { labels: Object.keys(saidasPorDescricao), datasets: [{ data: Object.values(saidasPorDescricao), backgroundColor: ['#db1472', '#f8b81f', '#f472b6', '#fbbf24', '#a855f7'] }] } });
+            }
+            function openModal(tipo) {
+                const form = document.getElementById('form-lancamento'); form.reset();
+                document.getElementById('modal-title').textContent = tipo === 'entrada' ? 'Nova Entrada' : 'Nova Saída';
+                document.getElementById('lancamento-tipo').value = tipo;
+                document.getElementById('lancamento-data').valueAsDate = new Date();
+                document.getElementById('modal-lancamento').classList.add('visible');
+            }
+            function closeModal() { document.getElementById('modal-lancamento').classList.remove('visible'); }
+
+             // --- PÁGINA DE VENDAS ---
+            function renderPaginaVendas() {
+                const filtroPeriodoEl = document.querySelector('#vendas-filtro-periodo .filtro-btn.active');
+                if (!filtroPeriodoEl) return;
+                const filtroPeriodo = filtroPeriodoEl.dataset.periodo;
+                const agora = new Date(); let dataInicio;
+                if(filtroPeriodo === 'hoje') { dataInicio = new Date(); dataInicio.setHours(0,0,0,0); }
+                else if(filtroPeriodo === 'semana') { dataInicio = new Date(agora.setDate(agora.getDate() - agora.getDay())); dataInicio.setHours(0,0,0,0); }
+                else { dataInicio = new Date(agora.getFullYear(), agora.getMonth(), 1); }
+                const pedidosNoPeriodo = appData.vendas.filter(v => new Date(v.data) >= dataInicio);
+                document.getElementById('vendas-total-pedidos').textContent = pedidosNoPeriodo.length;
+                const faturamento = pedidosNoPeriodo.reduce((sum, v) => sum + v.valorTotal, 0);
+                document.getElementById('vendas-faturamento-bruto').textContent = formatCurrency(faturamento);
+                const vendasContagem = pedidosNoPeriodo.flatMap(v => v.itens).reduce((acc, item) => { acc[item.nome] = (acc[item.nome] || 0) + item.quantidade; return acc; }, {});
+                const maisVendido = Object.keys(vendasContagem).sort((a,b) => vendasContagem[b] - vendasContagem[a])[0];
+                document.getElementById('vendas-item-mais-vendido').textContent = maisVendido || '-';
+                const estoqueBaixo = appData.produtos.filter(p => (p.variacoes || []).reduce((s,v) => s + v.estoque, 0) <= 5).map(p => p.nome).join(', ') || '-';
+                document.getElementById('destaque-estoque-baixo').querySelector('p').textContent = estoqueBaixo;
+                const listaPedidosEl = document.getElementById('pedidos-lista'); listaPedidosEl.innerHTML = '';
+                document.getElementById('sem-pedidos-msg').classList.toggle('view-hidden', pedidosNoPeriodo.length > 0);
+                pedidosNoPeriodo.forEach(pedido => {
+                    const card = document.createElement('div'); card.className = 'pedido-card card';
+                    card.innerHTML = `<div class="pedido-header"><span>${pedido.cliente.nome}</span><span class="pedido-status status-${pedido.status}">${pedido.status}</span></div><div class="pedido-body"><p><strong>Data:</strong> ${new Date(pedido.data).toLocaleDateString('pt-BR')}</p><p><strong>Itens:</strong> ${pedido.itens.map(i => `${i.quantidade}x ${i.nome} ${i.variacao ? `(${i.variacao})` : ''}`).join(', ')}</p></div><div class="pedido-footer"><strong>${formatCurrency(pedido.valorTotal)}</strong><button class="btn btn-ver-detalhes" data-pedido-id="${pedido.id}" style="width:auto;padding:0.5rem 1rem;font-size:0.8rem;">Ver Detalhes</button></div>`;
+                    listaPedidosEl.appendChild(card);
+                });
+            }
+            function openPedidoModal() {
+                const selectCliente = document.getElementById('pedido-select-cliente');
+                selectCliente.innerHTML = `<option value="novo">-- Cadastrar Novo Cliente --</option>`;
+                appData.clientes.forEach(c => { selectCliente.innerHTML += `<option value="${c.id}">${c.nome}</option>`; });
+                
+                document.getElementById('select-produto-pedido').innerHTML = appData.produtos.map(p => `<option value="${p.id}">${p.nome} (${formatCurrency(p.precoVenda)})</option>`).join('');
+                currentPedidoItens = []; updatePedidoItensLista();
+                document.getElementById('modal-novo-pedido').classList.add('visible');
+                document.getElementById('novo-cliente-fields').classList.remove('view-hidden');
+                 handleProdutoChangePedido();
+            }
+            function closePedidoModal() { document.getElementById('modal-novo-pedido').classList.remove('visible'); }
+            function updatePedidoItensLista() {
+                const listaItensEl = document.getElementById('pedido-itens-lista'); listaItensEl.innerHTML = ''; let total = 0;
+                currentPedidoItens.forEach(item => { const itemTotal = item.precoVenda * item.quantidade; total += itemTotal; listaItensEl.innerHTML += `<li><span>${item.quantidade}x ${item.nome} ${item.variacao ? `(${item.variacao})` : ''}</span><strong>${formatCurrency(itemTotal)}</strong></li>`; });
+                document.getElementById('pedido-total').textContent = formatCurrency(total);
+            }
+            function handleVendaSubmit(e) {
+                e.preventDefault(); if(currentPedidoItens.length === 0) { alert('Adicione pelo menos um produto ao pedido.'); return; }
+                let clienteInfo; const selectCliente = document.getElementById('pedido-select-cliente');
+                if (selectCliente.value === 'novo') {
+                    const nome = document.getElementById('pedido-cliente-nome').value; const telefone = document.getElementById('pedido-cliente-telefone').value;
+                    if (!nome) { alert('Por favor, informe o nome do novo cliente.'); return; }
+                    const novoCliente = { id: Date.now(), nome, telefone }; appData.clientes.push(novoCliente); clienteInfo = { id: novoCliente.id, nome: novoCliente.nome };
+                } else {
+                    const clienteExistente = appData.clientes.find(c => c.id == selectCliente.value); clienteInfo = { id: clienteExistente.id, nome: clienteExistente.nome };
+                }
+                const valorTotal = currentPedidoItens.reduce((sum, item) => sum + (item.precoVenda * item.quantidade), 0);
+                const novaVenda = { id: Date.now(), cliente: clienteInfo, data: new Date().toISOString(), itens: currentPedidoItens, valorTotal, status: document.getElementById('pedido-status').value };
+                appData.vendas.push(novaVenda);
+                currentPedidoItens.forEach(itemVendido => {
+                    const produtoEstoque = appData.produtos.find(p => p.id == itemVendido.id);
+                    if(produtoEstoque) {
+                        if(itemVendido.variacao) {
+                            const variacaoEstoque = produtoEstoque.variacoes.find(v => v.nome === itemVendido.variacao);
+                            if(variacaoEstoque) variacaoEstoque.estoque -= itemVendido.quantidade;
+                        }
+                    }
+                });
+                appData.fluxoDeCaixa.lancamentos.push({ id: Date.now(), tipo: 'entrada', descricao: `Venda para ${novaVenda.cliente.nome}`, valor: novaVenda.valorTotal, data: novaVenda.data });
+                saveData(); renderPaginaVendas(); renderFluxoDeCaixa(); closePedidoModal();
+            }
+            function handleProdutoChangePedido(){
+                const selectProduto = document.getElementById('select-produto-pedido');
+                const selectVariacao = document.getElementById('select-variacao-pedido');
+                const produtoId = selectProduto.value;
+                const produto = appData.produtos.find(p => p.id == produtoId);
+
+                if(produto && produto.variacoes && produto.variacoes.length > 0){
+                    selectVariacao.innerHTML = produto.variacoes.map(v => `<option value="${v.nome}">${v.nome} (Est: ${v.estoque})</option>`).join('');
+                    selectVariacao.classList.remove('view-hidden');
+                } else {
+                    selectVariacao.classList.add('view-hidden');
+                }
+            }
+            function setupVendasPage() {
+                document.getElementById('btn-novo-pedido').addEventListener('click', openPedidoModal);
+                document.getElementById('btn-fechar-modal-pedido').addEventListener('click', closePedidoModal);
+                document.getElementById('select-produto-pedido').addEventListener('change', handleProdutoChangePedido);
+                document.getElementById('btn-add-produto-pedido').addEventListener('click', () => {
+                    const produtoId = document.getElementById('select-produto-pedido').value;
+                    const quantidade = parseInt(document.getElementById('input-qtd-produto').value);
+                    const produto = appData.produtos.find(p => p.id == produtoId);
+                    const selectVariacao = document.getElementById('select-variacao-pedido');
+                    const variacaoSelecionada = !selectVariacao.classList.contains('view-hidden') ? selectVariacao.value : null;
+
+                    if(produto && quantidade > 0) {
+                        const itemExistente = currentPedidoItens.find(item => item.id == produtoId && item.variacao === variacaoSelecionada);
+                        if(itemExistente) {
+                            itemExistente.quantidade += quantidade;
+                        } else {
+                            currentPedidoItens.push({ ...produto, quantidade, variacao: variacaoSelecionada });
+                        }
+                        updatePedidoItensLista();
+                    }
+                });
+                document.getElementById('form-novo-pedido').addEventListener('submit', handleVendaSubmit);
+                document.querySelectorAll('#vendas-filtro-periodo .filtro-btn').forEach(btn => btn.addEventListener('click', () => {
+                    document.querySelectorAll('#vendas-filtro-periodo .filtro-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    renderPaginaVendas();
+                }));
+                document.getElementById('pedidos-lista').addEventListener('click', e => {
+                    const btn = e.target.closest('.btn-ver-detalhes');
+                    if(btn) openDetalhesPedidoModal(btn.dataset.pedidoId);
+                })
+            }
+            function openDetalhesPedidoModal(pedidoId) {
+                pedidoEmEdicaoId = pedidoId;
+                const pedido = appData.vendas.find(v => v.id == pedidoId);
+                const contentEl = document.getElementById('detalhes-pedido-content');
+                contentEl.innerHTML = `
+                    <p><strong>Cliente:</strong> ${pedido.cliente.nome}</p>
+                    <p><strong>Data:</strong> ${new Date(pedido.data).toLocaleString('pt-BR')}</p>
+                    <p><strong>Status:</strong> ${pedido.status}</p>
+                    <p><strong>Total:</strong> ${formatCurrency(pedido.valorTotal)}</p>
+                    <h4 style="margin-top:1rem;">Itens:</h4>
+                    <ul>${pedido.itens.map(i => `<li>${i.quantidade}x ${i.nome} ${i.variacao ? `(${i.variacao})` : ''}</li>`).join('')}</ul>
+                `;
+                document.getElementById('modal-detalhes-pedido').classList.add('visible');
+            }
+            document.getElementById('btn-fechar-modal-detalhes').addEventListener('click', () => document.getElementById('modal-detalhes-pedido').classList.remove('visible'));
+            document.getElementById('btn-excluir-pedido').addEventListener('click', () => {
+                if(confirm('Tem certeza que deseja excluir este pedido? Esta ação não pode ser desfeita.')) {
+                    appData.vendas = appData.vendas.filter(v => v.id != pedidoEmEdicaoId);
+                    saveData();
+                    renderPaginaVendas();
+                    document.getElementById('modal-detalhes-pedido').classList.remove('visible');
+                }
+            });
+
+
+            // --- INICIALIZAÇÃO ---
+            loadData();
+            menuToggle.addEventListener('click', toggleMenu);
+            overlay.addEventListener('click', toggleMenu);
+            navLinks.forEach(link => link.addEventListener('click', (e) => { e.preventDefault(); switchPage(link.dataset.page); }));
+            setupDespesasPage();
+            setupProdutosPage();
+            setupFluxoDeCaixaPage();
+            setupVendasPage();
+
+            switchPage('dashboard');
+            feather.replace();
+        });
+    </script>
+</body>
+</html>
