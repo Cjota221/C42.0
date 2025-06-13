@@ -280,7 +280,7 @@
         }
         @media (min-width: 1024px) {
             .main-grid { grid-template-columns: repeat(2, 1fr); } 
-            .dashboard-grid { grid-template-columns: repeat(3, 1fr); }
+            .dashboard-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
             .calculators-grid { grid-template-columns: repeat(2, 1fr); }
             .side-menu { transform: translateX(0); }
             .main-container { margin-left: 280px; }
@@ -351,9 +351,9 @@
                     <a href="#" class="quick-btn menu-link" data-target="fluxo-caixa"><div class="icon"><svg><use href="#icon-caixa"/></svg></div><span>Caixa</span></a>
                 </div>
                 <div class="dashboard-grid">
-                    <div class="card"><h3 class="card-title">Faturamento do Mês</h3><p class="card-content"><span class="currency">R$</span>7.850,40</p></div>
-                    <div class="card"><h3 class="card-title">Lucro Líquido</h3><p class="card-content"><span class="currency">R$</span>2.120,90</p></div>
-                    <div class="card"><h3 class="card-title">Pedidos Realizados</h3><p class="card-content">42</p></div>
+                    <div class="card"><h3 class="card-title">Faturamento do Mês</h3><p class="card-content" id="dashboard-faturamento">R$ 0,00</p></div>
+                    <div class="card"><h3 class="card-title">Lucro Líquido do Mês</h3><p class="card-content" id="dashboard-lucro">R$ 0,00</p></div>
+                    <div class="card"><h3 class="card-title">Pedidos no Mês</h3><p class="card-content" id="dashboard-pedidos">0</p></div>
                     <div class="card"><h3 class="card-title">Vendas por Produto</h3><div class="pie-chart-container"><div id="vendas-pie-chart" class="pie-chart"></div><ul id="vendas-legend" class="chart-legend"></ul></div></div>
                     <div class="card" id="card-meta-divida">
                         <h3 class="card-title">Meta: Quitar Dívidas</h3>
@@ -361,7 +361,6 @@
                             <!-- Conteúdo dinâmico aqui -->
                         </div>
                     </div>
-                    <div class="card"><h3 class="card-title">Clientes Ativos</h3><p class="card-content">15</p></div>
                 </div>
             </section>
             
@@ -447,14 +446,15 @@
                 </div>
             </section>
             
-            <!-- PÁGINA DE VENDAS (INTACTA) -->
+            <!-- PÁGINA DE VENDAS (ATUALIZADA) -->
             <section id="vendas" class="page">
                 <h2 class="page-title">Gestão de Vendas</h2>
                 <p class="page-subtitle">Registre suas vendas e acompanhe seu faturamento.</p>
 
-                <div class="dashboard-grid">
+                <div class="dashboard-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
                      <div class="card"><h3 class="card-title">Pedidos no Mês</h3><p class="card-content" id="vendas-pedidos-mes">0</p></div>
                      <div class="card"><h3 class="card-title">Faturamento Bruto</h3><p class="card-content" id="vendas-faturamento-bruto">R$ 0,00</p></div>
+                     <div class="card"><h3 class="card-title">Lucro Líquido</h3><p class="card-content" id="vendas-lucro-liquido">R$ 0,00</p></div>
                      <div class="card"><h3 class="card-title">Item Mais Vendido</h3><p class="card-content" id="vendas-item-mais-vendido">N/A</p></div>
                 </div>
 
@@ -1107,7 +1107,7 @@
             document.getElementById('upload-area')?.addEventListener('click', () => document.getElementById('foto-produto').click()); document.getElementById('foto-produto')?.addEventListener('change', function(e) { if(e.target.files && e.target.files[0]) { const reader = new FileReader(); reader.onload = function(event) { const preview = document.getElementById('preview-foto'); preview.src = event.target.result; preview.style.display = 'block'; }; reader.readAsDataURL(e.target.files[0]); } });
             formProduto?.addEventListener('submit', function(e) { e.preventDefault(); const id = document.getElementById('produto-id').value; const produtoData = { nome: document.getElementById('nome-produto').value, custo: parseFloat(document.getElementById('custo-produto').value), categoria: document.getElementById('categoria-produto').value, margemLucro: parseInt(document.getElementById('margem-lucro').value), precoSugerido: parseCurrency(document.getElementById('preco-sugerido').textContent), foto: document.getElementById('preview-foto').src, variationType: document.querySelector('input[name="variation-type"]:checked').value, variations: [], estoque: 0 }; if (produtoData.variationType === 'none') { produtoData.estoque = parseInt(document.getElementById('estoque-produto').value) || 0; } else if (produtoData.variationType === 'simple') { produtoData.variationName = document.getElementById('simple-variation-name').value; document.querySelectorAll('#simple-variation-list .variation-row').forEach(row => { produtoData.variations.push({ name: row.querySelector('.simple-variation-row-name').value, stock: parseInt(row.querySelector('.simple-variation-row-stock').value) || 0 }); }); } else if (produtoData.variationType === 'combined') { produtoData.attribute1 = { name: document.getElementById('combined-variation-name1').value, values: document.getElementById('combined-variation-values1').value.split(',').map(v => v.trim()) }; produtoData.attribute2 = { name: document.getElementById('combined-variation-name2').value, values: document.getElementById('combined-variation-values2').value.split(',').map(v => v.trim()) }; document.querySelectorAll('#combined-variation-list .variation-row').forEach(row => { produtoData.variations.push({ attr1: row.querySelector('.combined-variation-row-v1').value, attr2: row.querySelector('.combined-variation-row-v2').value, stock: parseInt(row.querySelector('.combined-variation-row-stock').value) || 0 }); }); } if (id) { const index = produtos.findIndex(p => p.id == id); produtos[index] = { ...produtos[index], ...produtoData }; } else { produtoData.id = Date.now(); produtos.push(produtoData); } renderizarProdutos(); closeModal('modal-produto'); });
              
-            // --- LÓGICA DA PÁGINA DE VENDAS (INTACTA) ---
+            // --- LÓGICA DA PÁGINA DE VENDAS (ATUALIZADA) ---
             const btnNovaVenda = document.getElementById('btn-nova-venda');
             const formVenda = document.getElementById('form-venda');
             const btnAdicionarItemVenda = document.getElementById('btn-adicionar-item-venda');
@@ -1117,7 +1117,27 @@
             const saleDiscountValueInput = document.getElementById('sale-discount-value');
             const saleDiscountTypeInput = document.getElementById('sale-discount-type');
             function renderizarVendas() { const listaVendasEl = document.getElementById('lista-vendas'); if(!listaVendasEl) return; listaVendasEl.innerHTML = ''; if(vendas.length === 0) { listaVendasEl.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 20px;">Nenhuma venda registrada.</td></tr>`; } else { vendas.forEach(venda => { const tr = document.createElement('tr'); tr.innerHTML = `<td>${venda.clienteNome || 'N/A'}</td> <td>${venda.items.length} item(s)</td> <td>${formatCurrency(venda.total)}</td> <td>${formatDate(venda.data)}</td> <td><span class="status-badge pago">Pago</span></td>`; listaVendasEl.appendChild(tr); }); } renderizarDashboardVendas(); }
-            function renderizarDashboardVendas() { const pedidosMesEl = document.getElementById('vendas-pedidos-mes'); const faturamentoBrutoEl = document.getElementById('vendas-faturamento-bruto'); const itemMaisVendidoEl = document.getElementById('vendas-item-mais-vendido'); if(!pedidosMesEl) return; pedidosMesEl.textContent = vendas.length; faturamentoBrutoEl.textContent = formatCurrency(vendas.reduce((acc, venda) => acc + venda.total, 0)); if (vendas.length > 0) { const itemCounts = {}; vendas.forEach(venda => { venda.items.forEach(item => { itemCounts[item.nome] = (itemCounts[item.nome] || 0) + item.quantidade; }); }); const maisVendido = Object.keys(itemCounts).sort((a,b) => itemCounts[b] - itemCounts[a])[0]; itemMaisVendidoEl.textContent = maisVendido || 'N/A'; } else { itemMaisVendidoEl.textContent = 'N/A'; } }
+            function renderizarDashboardVendas() {
+                const pedidosMesEl = document.getElementById('vendas-pedidos-mes'); 
+                const faturamentoBrutoEl = document.getElementById('vendas-faturamento-bruto'); 
+                const lucroLiquidoEl = document.getElementById('vendas-lucro-liquido');
+                const itemMaisVendidoEl = document.getElementById('vendas-item-mais-vendido'); 
+                
+                if(!pedidosMesEl) return; 
+
+                const hoje = new Date();
+                const primeiroDiaMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
+                const ultimoDiaMes = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0);
+
+                const vendasMes = vendas.filter(v => new Date(v.data) >= primeiroDiaMes && new Date(v.data) <= ultimoDiaMes);
+                const lucroLiquidoMes = getLucroLiquidoPeriodo(primeiroDiaMes, ultimoDiaMes);
+
+                pedidosMesEl.textContent = vendasMes.length; 
+                faturamentoBrutoEl.textContent = formatCurrency(vendasMes.reduce((acc, venda) => acc + venda.total, 0)); 
+                lucroLiquidoEl.textContent = formatCurrency(lucroLiquidoMes);
+
+                if (vendasMes.length > 0) { const itemCounts = {}; vendasMes.forEach(venda => { venda.items.forEach(item => { itemCounts[item.nome] = (itemCounts[item.nome] || 0) + item.quantidade; }); }); const maisVendido = Object.keys(itemCounts).sort((a,b) => itemCounts[b] - itemCounts[a])[0]; itemMaisVendidoEl.textContent = maisVendido || 'N/A'; } else { itemMaisVendidoEl.textContent = 'N/A'; } 
+            }
             function openVendaModal() { formVenda.reset(); currentSaleItems = []; renderCurrentSaleItems(); updateSaleSummary(); openModal('modal-venda'); }
             function openProductSelectionModal() { productSelectionListEl.innerHTML = ''; produtos.forEach(produto => { const totalEstoque = produto.variationType === 'none' ? produto.estoque : produto.variations.reduce((acc, v) => acc + (v.stock || 0), 0); if (totalEstoque <= 0) return; const itemEl = document.createElement('div'); itemEl.className = 'product-selection-item'; itemEl.dataset.produtoId = produto.id; itemEl.innerHTML = `<div class="product-selection-item-header"><img src="${produto.foto || 'https://placehold.co/100x100/fbcfe8/831843?text=C4'}" alt="${produto.nome}" class="product-img"><div class="product-selection-item-info"><div class="product-name">${produto.nome}</div><div class="product-category">${formatCurrency(produto.precoSugerido)}</div></div></div><div class="product-variation-selection"></div>`; productSelectionListEl.appendChild(itemEl); }); openModal('modal-selecionar-produto'); }
             productSelectionListEl.addEventListener('click', function(e) { const header = e.target.closest('.product-selection-item-header'); if (!header) return; const itemEl = header.parentElement; const wasExpanded = itemEl.classList.contains('expanded'); document.querySelectorAll('.product-selection-item.expanded').forEach(el => el.classList.remove('expanded')); if (wasExpanded) return; itemEl.classList.add('expanded'); const variationContainer = itemEl.querySelector('.product-variation-selection'); const produtoId = itemEl.dataset.produtoId; const produto = produtos.find(p => p.id == produtoId); renderVariationSelector(produto, variationContainer); });
@@ -1310,6 +1330,8 @@
                 const custo = parseFloat(document.getElementById('calc-lc-custo')?.value) || 0;
                 const despesas = parseFloat(document.getElementById('calc-lc-despesas')?.value) || 0;
                 const margem = parseFloat(document.getElementById('calc-lc-margem')?.value) || 0;
+                const margemValorEl = document.getElementById('calc-lc-margem-valor');
+                if (margemValorEl) margemValorEl.textContent = `${margem}%`;
 
                 const custoTotal = custo + despesas;
                 
@@ -1351,7 +1373,7 @@
                 const lucroLiquidoInput = document.getElementById('calc-reinvest-lucro');
                 const pieChart = document.getElementById('reinvest-pie-chart');
                 const legend = document.getElementById('reinvest-legend');
-
+                
                 if(!lucroLiquidoInput || !pieChart || !legend) return;
 
                 const lucroLiquido = parseFloat(lucroLiquidoInput.value) || 0;
@@ -1388,7 +1410,11 @@
             }
 
             function getLucroLiquidoPeriodo(startDate, endDate) {
-                const vendasPeriodo = vendas.filter(v => new Date(v.data) >= startDate && new Date(v.data) <= endDate);
+                const vendasPeriodo = vendas.filter(v => {
+                    const dataVenda = new Date(v.data);
+                    return dataVenda >= startDate && dataVenda <= endDate;
+                });
+
                 const faturamentoBruto = vendasPeriodo.reduce((acc, v) => acc + v.total, 0);
                 
                 const custoProdutosVendidos = vendasPeriodo.reduce((acc, v) => {
@@ -1397,11 +1423,8 @@
                         return itemAcc + (produto ? produto.custo * item.quantidade : 0);
                     }, 0);
                 }, 0);
-                
-                const despesasPeriodo = fluxoCaixa.filter(t => t.tipo === 'saida' && new Date(t.data) >= startDate && new Date(t.data) <= endDate);
-                const totalDespesas = despesasPeriodo.reduce((acc, d) => acc + d.valor, 0);
 
-                return faturamentoBruto - custoProdutosVendidos - totalDespesas;
+                return faturamentoBruto - custoProdutosVendidos;
             }
 
             function setupCalculadoras() {
@@ -1470,14 +1493,8 @@
 
                 const faturamentoBruto = vendasFiltradas.reduce((acc, v) => acc + v.total, 0);
                 const totalDespesas = despesasFiltradas.reduce((acc, d) => acc + d.valor, 0);
-                const custoProdutosVendidos = vendasFiltradas.reduce((acc, v) => {
-                    return acc + v.items.reduce((itemAcc, item) => {
-                        const produto = produtos.find(p => p.id === item.produtoId);
-                        return itemAcc + (produto ? produto.custo * item.quantidade : 0);
-                    }, 0);
-                }, 0);
-                const lucroLiquido = faturamentoBruto - custoProdutosVendidos - totalDespesas;
-
+                const lucroLiquido = getLucroLiquidoPeriodo(dataInicio, dataFim) - totalDespesas;
+                
                 document.getElementById('relatorio-faturamento').textContent = formatCurrency(faturamentoBruto);
                 document.getElementById('relatorio-lucro').textContent = formatCurrency(lucroLiquido);
                 document.getElementById('relatorio-despesas').textContent = formatCurrency(totalDespesas);
