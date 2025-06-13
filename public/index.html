@@ -44,91 +44,146 @@
             --cor-sucesso: #10b981;
             --cor-alerta: #f59e0b;
             --cor-erro: #ef4444;
+            --cor-info: #3b82f6;
 
             /* UI Geral */
             --sombra-card: 0 4px 10px rgba(131, 24, 67, 0.08);
             --borda-radius: 12px;
             --borda-card: 1px solid #fbcfe8;
-            --font-principal: 'Poppins', sans-serif; /* FONTE ATUALIZADA */
+            --font-principal: 'Poppins', sans-serif;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: var(--font-principal); background-color: var(--cor-fundo-app); color: var(--cor-texto); overscroll-behavior-x: none; }
+        html { font-size: 100%; } /* Base 16px */
+        body { font-family: var(--font-principal); background-color: var(--cor-fundo-app); color: var(--cor-texto); overscroll-behavior-x: none; line-height: 1.5; }
 
         /* ------------------- */
         /* ESTRUTURA PRINCIPAL E NAVEGAÇÃO */
         /* ------------------- */
-        .side-menu { position: fixed; top: 0; left: 0; width: 280px; height: 100%; background-color: var(--cor-principal); color: var(--cor-texto-claro); transform: translateX(-100%); transition: transform 0.3s ease-in-out; z-index: 1000; display: flex; flex-direction: column; padding-top: 20px; }
-        .side-menu.active { transform: translateX(0); }
-        .menu-header { padding: 20px; text-align: center; border-bottom: 1px solid rgba(255, 255, 255, 0.2); }
-        .menu-header h2 { font-size: 1.5rem; font-weight: 700; }
+        .side-menu { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 280px; 
+            height: 100%; 
+            background-color: var(--cor-principal); 
+            color: var(--cor-texto-claro); 
+            transform: translateX(-100%); 
+            transition: transform 0.3s ease-in-out; 
+            z-index: 1000; 
+            display: flex; 
+            flex-direction: column; 
+        }
+        .side-menu.active { 
+            transform: translateX(0); 
+        }
+        .menu-header { padding: 20px; text-align: center; border-bottom: 1px solid rgba(255, 255, 255, 0.2); position: relative; }
+        .menu-header h2 { font-size: 1.5rem; font-weight: 700; margin-top: 10px; line-height: 1.2; }
         .menu-header h2 span { color: var(--cor-secundaria); }
         .menu-links { list-style: none; flex-grow: 1; overflow-y: auto; }
-        .menu-links a { display: flex; align-items: center; gap: 15px; padding: 18px 25px; color: var(--cor-texto-claro); text-decoration: none; font-size: 1rem; font-weight: 500; transition: background-color 0.2s ease, color 0.2s ease; border-left: 4px solid transparent; }
+        .menu-links a { display: flex; align-items: center; gap: 15px; padding: 16px 20px; color: var(--cor-texto-claro); text-decoration: none; font-size: 1rem; font-weight: 500; transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease; border-left: 4px solid transparent; }
+        .menu-links a:active { transform: scale(0.98); }
         .menu-links a.active, .menu-links a:hover { background-color: var(--cor-secundaria); color: var(--cor-principal); border-left-color: var(--cor-texto-claro); }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 999; opacity: 0; visibility: hidden; transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out; }
-        .overlay.active { opacity: 1; visibility: visible; }
-        .main-container { transition: transform 0.3s ease-in-out; min-height: 100vh; }
-        body.menu-open .main-container { transform: translateX(280px); }
+        
+        .overlay { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background-color: rgba(0, 0, 0, 0.5); 
+            z-index: 999; 
+            opacity: 0; 
+            visibility: hidden; 
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out; 
+        }
+        .overlay.active { 
+            opacity: 1; 
+            visibility: visible; 
+        }
+        
+        .main-container { 
+            transition: margin-left 0.3s ease-in-out; 
+            min-height: 100vh; 
+        }
+
+        .close-menu-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
         /* ------------------- */
         /* CABEÇALHO DA PÁGINA */
         /* ------------------- */
-        .app-header { display: flex; align-items: center; justify-content: space-between; padding: 20px; background: linear-gradient(135deg, var(--cor-principal), #f472b6); color: var(--cor-texto-claro); position: sticky; top: 0; z-index: 900;}
-        .hamburger-menu { background: none; border: none; cursor: pointer; padding: 5px; }
-        .app-header-title { font-size: 1.2rem; font-weight: 600; }
-        .header-actions { width: 34px; }
+        .app-header { display: flex; align-items: center; justify-content: space-between; padding: 16px; background: linear-gradient(135deg, var(--cor-principal), #f472b6); color: var(--cor-texto-claro); position: sticky; top: 0; z-index: 900;}
+        .hamburger-menu { background: none; border: none; cursor: pointer; padding: 10px; width: 44px; height: 44px; }
+        .app-header-title { font-size: 1.2rem; font-weight: 600; line-height: 1.2; }
+        .header-actions { width: 44px; }
 
         /* ------------------- */
         /* CONTEÚDO DAS PÁGINAS */
         /* ------------------- */
-        .page { display: none; padding: 20px; animation: fadeIn 0.5s ease-in-out; }
+        .page { display: none; padding: 16px; animation: fadeIn 0.2s ease-in-out; }
+        .page > *:not(:last-child) { margin-bottom: 24px; }
         .page.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .page-title { font-size: 1.8rem; font-weight: 700; margin-bottom: 5px; color: var(--cor-texto); }
-        .page-subtitle { font-size: 1rem; margin-bottom: 25px; color: var(--cor-texto-secundario); font-weight: 400; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .page-title { font-size: 1.5rem; /* 24px */ font-weight: 700; margin-bottom: 5px; color: var(--cor-texto); line-height: 1.2; }
+        .page-subtitle { font-size: 1rem; /* 16px */ margin-bottom: 24px; color: var(--cor-texto-secundario); font-weight: 400; }
 
         /* ------------------- */
         /* ESTILOS DE CARDS */
         /* ------------------- */
-        .card { background-color: var(--cor-fundo-card); border-radius: var(--borda-radius); padding: 20px; box-shadow: var(--sombra-card); border: var(--borda-card); transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .card { background-color: var(--cor-fundo-card); border-radius: var(--borda-radius); padding: 20px; box-shadow: var(--sombra-card); border: var(--borda-card); transition: transform 0.2s ease, box-shadow 0.2s ease; min-height: 120px;}
         .card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(131, 24, 67, 0.12); }
-        .card-title { font-size: 1rem; font-weight: 600; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; color: var(--cor-texto); }
+        .card-title { font-size: 1.125rem; /* 18px */ font-weight: 600; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; color: var(--cor-texto); line-height: 1.2;}
         .card-content { font-size: 1.8rem; font-weight: 700; color: var(--cor-principal); }
         .card-content .currency { font-size: 1rem; font-weight: 500; color: var(--cor-texto); margin-right: 4px; }
-        .card-content .detail { font-size: 0.9rem; font-weight: 400; color: var(--cor-texto-secundario); display: block; margin-top: 5px; }
+        .card-content .detail { font-size: 0.875rem; /* 14px */ font-weight: 400; color: var(--cor-texto-secundario); display: block; margin-top: 5px; }
 
 
         /* ------------------- */
         /* ESTILOS DE FORMULÁRIO */
         /* ------------------- */
-        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .form-group { margin-bottom: 15px; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .form-group { margin-bottom: 16px; }
         .form-group.full-width { grid-column: 1 / -1; }
-        .form-group label { display: block; font-weight: 500; margin-bottom: 5px; font-size: 0.9rem; }
-        .form-group input, .form-group select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 1rem; color: var(--cor-texto); background-color: #f8fafc; font-family: var(--font-principal); }
+        .form-group label { display: block; font-weight: 500; margin-bottom: 8px; font-size: 0.9rem; color: #52525b; }
+        .form-group input, .form-group select { width: 100%; min-height: 48px; padding: 14px 12px; border: 1px solid #d4d4d8; border-radius: 8px; font-size: 1rem; color: var(--cor-texto); background-color: #fafafa; font-family: var(--font-principal); transition: border-color 0.2s, box-shadow 0.2s; }
         .form-group input:focus, .form-group select:focus { border-color: var(--cor-principal); outline: none; box-shadow: 0 0 0 2px rgba(219, 20, 114, 0.2); }
         .form-group input[readonly] { background-color: #f1f5f9; cursor: not-allowed; }
-        .btn { padding: 12px 20px; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background-color 0.2s, transform 0.2s; width: 100%; font-family: var(--font-principal); display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn { padding: 14px 20px; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background-color 0.2s, transform 0.2s, filter 0.2s; width: 100%; font-family: var(--font-principal); display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; }
+        .btn:hover { filter: brightness(1.1); }
+        .btn:active { transform: scale(0.98); filter: brightness(0.95); }
         .btn-primary { background-color: var(--cor-principal); color: var(--cor-texto-claro); }
-        .btn-primary:hover { background-color: #c71267; transform: scale(1.02); }
         .btn-secondary { background-color: #f1f5f9; color: var(--cor-texto); border: 1px solid #e2e8f0; }
-        .btn-sm { padding: 8px 12px; font-size: 0.8rem; width: auto; }
+        .btn-sm { padding: 10px; width: 44px; height: 44px; }
         .btn-danger { background-color: #fee2e2; color: var(--cor-erro); }
         .btn-danger:hover { background-color: #fecaca; }
         
         /* ------------------- */
         /* GRID LAYOUTS */
         /* ------------------- */
-        .main-grid { display: grid; gap: 20px; grid-template-columns: 1fr; }
-        .dashboard-grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); margin-bottom: 25px;}
+        .main-grid { display: grid; gap: 16px; grid-template-columns: 1fr; }
+        .dashboard-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); margin-bottom: 24px;}
         
         /* ------------------- */
         /* COMPONENTES DO DASHBOARD */
         /* ------------------- */
-        .quick-access-buttons { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 25px; -ms-overflow-style: none; scrollbar-width: none; }
+        .quick-access-buttons { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 24px; -ms-overflow-style: none; scrollbar-width: none; }
         .quick-access-buttons::-webkit-scrollbar { display: none; }
-        .quick-btn { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 15px; background-color: var(--cor-fundo-card); border-radius: var(--borda-radius); box-shadow: var(--sombra-card); border: var(--borda-card); text-decoration: none; color: var(--cor-texto); font-size: 0.8rem; font-weight: 500; min-width: 90px; text-align: center; cursor: pointer; transition: transform 0.2s, background-color 0.2s, color 0.2s; }
+        .quick-btn { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 15px; background-color: var(--cor-fundo-card); border-radius: var(--borda-radius); box-shadow: var(--sombra-card); border: var(--borda-card); text-decoration: none; color: var(--cor-texto); font-size: 0.8rem; font-weight: 500; min-width: 90px; text-align: center; cursor: pointer; transition: transform 0.2s, background-color 0.2s, color 0.2s, filter 0.2s; }
+        .quick-btn:active { transform: scale(0.95); filter: brightness(0.95); }
         .quick-btn:hover { transform: scale(1.05); background-color: var(--cor-secundaria); color: var(--cor-principal); border-color: var(--cor-secundaria); }
         .quick-btn .icon { background-color: var(--cor-principal); color: var(--cor-texto-claro); padding: 10px; border-radius: 50%; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; }
         .pie-chart { width: 150px; height: 150px; border-radius: 50%; background: conic-gradient( var(--cor-sucesso) 0% 45%, var(--cor-alerta) 45% 75%, var(--cor-erro) 75% 90%, #a8a29e 90% 100%); position: relative; }
@@ -172,7 +227,7 @@
         .data-table .product-img { width: 50px; height: 50px; border-radius: 8px; object-fit: cover; background-color: #fce7f3; }
         .product-name { font-weight: 600; }
         .product-category { font-size: 0.85rem; color: var(--cor-texto-secundario); }
-        .actions { display: flex; gap: 10px; }
+        .actions { display: flex; gap: 8px; }
         .stock-detail { font-size: 0.85rem; color: var(--cor-texto-secundario); display: block; }
         
         /* ------------------- */
@@ -270,17 +325,35 @@
         #reinvest-chart-container { display: flex; align-items: center; justify-content: center; margin-top: 20px; flex-wrap: wrap; gap: 20px;}
         #reinvest-pie-chart { width: 150px; height: 150px; border-radius: 50%; position: relative; }
         #reinvest-legend { list-style: none; padding-left: 20px; }
+        
+        .table-responsive-container {
+            overflow-x: auto;
+            position: relative;
+        }
 
         /* ------------------- */
         /* RESPONSIVIDADE */
         /* ------------------- */
+        @media (max-width: 768px) {
+            .actions .btn-text {
+                display: none;
+            }
+            .list-header .actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .list-header .actions .btn-sm {
+                flex-grow: 1;
+            }
+        }
+        
         @media (min-width: 768px) { 
             .main-grid { grid-template-columns: repeat(2, 1fr); }
             .calculators-grid { grid-template-columns: repeat(2, 1fr); }
         }
         @media (min-width: 1024px) {
             .main-grid { grid-template-columns: repeat(2, 1fr); } 
-            .dashboard-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+            .dashboard-grid { grid-template-columns: repeat(3, 1fr); }
             .calculators-grid { grid-template-columns: repeat(2, 1fr); }
             .side-menu { transform: translateX(0); }
             .main-container { margin-left: 280px; }
@@ -315,14 +388,17 @@
     </svg>
 
     <nav class="side-menu" id="side-menu">
-        <div class="menu-header"> <h2>C<span>4</span></h2> </div>
+        <div class="menu-header">
+            <button class="close-menu-btn" id="close-menu-btn">&times;</button>
+            <h2>C<span>4</span></h2> 
+        </div>
         <ul class="menu-links">
             <li><a href="#" class="menu-link" data-target="dashboard"><svg class="icon"><use href="#icon-dashboard"/></svg>Dashboard</a></li>
             <li><a href="#" class="menu-link" data-target="despesas"><svg class="icon"><use href="#icon-despesas"/></svg>Despesas</a></li>
             <li><a href="#" class="menu-link" data-target="produtos"><svg class="icon"><use href="#icon-produtos"/></svg>Produtos</a></li>
             <li><a href="#" class="menu-link" data-target="vendas"><svg class="icon"><use href="#icon-vendas"/></svg>Vendas</a></li>
             <li><a href="#" class="menu-link" data-target="fluxo-caixa"><svg class="icon"><use href="#icon-caixa"/></svg>Fluxo de Caixa</a></li>
-            <li><a href="#" class="menu-link active" data-target="calculadoras"><svg class="icon"><use href="#icon-calculadora"/></svg>Calculadoras</a></li>
+            <li><a href="#" class="menu-link" data-target="calculadoras"><svg class="icon"><use href="#icon-calculadora"/></svg>Calculadoras</a></li>
             <li><a href="#" class="menu-link" data-target="liberdade-financeira"><svg class="icon"><use href="#icon-liberdade"/></svg>Liberdade Financeira</a></li>
             <li><a href="#" class="menu-link" data-target="relatorios"><svg class="icon"><use href="#icon-relatorios"/></svg>Relatórios</a></li>
             <li><a href="#" class="menu-link" data-target="c4-ia"><svg class="icon"><use href="#icon-ia"/></svg>C4 IA</a></li>
@@ -340,7 +416,7 @@
         </header>
 
         <main>
-            <!-- PÁGINA DASHBOARD (INTACTA) -->
+            <!-- PÁGINA DASHBOARD (ATUALIZADA) -->
             <section id="dashboard" class="page">
                 <h2 class="page-title">Bem-vinda ao C4!</h2>
                 <p class="page-subtitle">Seu painel financeiro para o sucesso.</p>
@@ -430,7 +506,7 @@
                         <h3 class="card-title" style="margin-bottom:0;">Meus Produtos</h3>
                         <button class="btn btn-primary" id="btn-novo-produto"><svg class="icon"><use href="#icon-plus"/></svg>Novo Produto</button>
                     </div>
-                    <div style="overflow-x: auto;">
+                    <div class="table-responsive-container">
                         <table class="data-table">
                             <thead>
                                 <tr>
@@ -446,7 +522,7 @@
                 </div>
             </section>
             
-            <!-- PÁGINA DE VENDAS (ATUALIZADA) -->
+            <!-- PÁGINA DE VENDAS (INTACTA) -->
             <section id="vendas" class="page">
                 <h2 class="page-title">Gestão de Vendas</h2>
                 <p class="page-subtitle">Registre suas vendas e acompanhe seu faturamento.</p>
@@ -463,7 +539,7 @@
                         <h3 class="card-title" style="margin-bottom:0;">Vendas Recentes</h3>
                         <button class="btn btn-primary" id="btn-nova-venda"><svg class="icon"><use href="#icon-vendas"/></svg>Nova Venda</button>
                     </div>
-                    <div style="overflow-x: auto;">
+                    <div class="table-responsive-container">
                         <table class="data-table">
                             <thead>
                                 <tr>
@@ -494,7 +570,7 @@
                         <h3 class="card-title" style="margin-bottom:0;">Lançamentos Recentes</h3>
                         <button class="btn btn-danger" id="btn-nova-saida"><svg class="icon"><use href="#icon-arrow-down"/></svg>Registrar Saída</button>
                     </div>
-                    <div style="overflow-x: auto;">
+                    <div class="table-responsive-container">
                         <table class="data-table">
                             <thead>
                                 <tr>
@@ -527,11 +603,11 @@
                     <div class="list-header">
                         <h3 class="card-title" style="margin-bottom:0;">Minhas Dívidas</h3>
                         <div class="actions">
-                            <button class="btn btn-secondary btn-sm menu-link" data-target="planejamento-quitacao">Planejar Quitação de Dívida</button>
-                            <button class="btn btn-primary btn-sm" id="btn-adicionar-divida"><svg class="icon"><use href="#icon-plus"/></svg>Adicionar</button>
+                            <button class="btn btn-secondary btn-sm menu-link" data-target="planejamento-quitacao"><span class="btn-text">Planejar Quitação</span><svg class="icon icon-only"><use href="#icon-calculadora"/></svg></button>
+                            <button class="btn btn-primary btn-sm" id="btn-adicionar-divida"><span class="btn-text">Adicionar</span><svg class="icon icon-only"><use href="#icon-plus"/></svg></button>
                         </div>
                     </div>
-                    <div style="overflow-x: auto;">
+                    <div class="table-responsive-container">
                         <table class="data-table">
                             <thead>
                                 <tr>
@@ -776,7 +852,7 @@
                                 <button class="btn btn-secondary btn-sm" id="export-vendas-pdf"><svg class="icon"><use href="#icon-relatorios"/></svg>Exportar PDF</button>
                             </div>
                         </div>
-                         <div style="overflow-x:auto;"><table class="data-table"><thead><tr><th>Data</th><th>Cliente</th><th>Total</th></tr></thead><tbody id="relatorio-vendas-table"></tbody></table></div>
+                         <div class="table-responsive-container"><table class="data-table"><thead><tr><th>Data</th><th>Cliente</th><th>Total</th></tr></thead><tbody id="relatorio-vendas-table"></tbody></table></div>
                     </div>
                      <div class="card" style="margin-top: 20px;">
                         <div class="list-header">
@@ -785,7 +861,7 @@
                                 <button class="btn btn-secondary btn-sm" id="export-despesas-pdf"><svg class="icon"><use href="#icon-relatorios"/></svg>Exportar PDF</button>
                             </div>
                         </div>
-                         <div style="overflow-x:auto;"><table class="data-table"><thead><tr><th>Data</th><th>Descrição</th><th>Valor</th></tr></thead><tbody id="relatorio-despesas-table"></tbody></table></div>
+                         <div class="table-responsive-container"><table class="data-table"><thead><tr><th>Data</th><th>Descrição</th><th>Valor</th></tr></thead><tbody id="relatorio-despesas-table"></tbody></table></div>
                     </div>
                     <div class="card" style="margin-top: 20px;">
                         <div class="list-header">
@@ -794,7 +870,7 @@
                                 <button class="btn btn-secondary btn-sm" id="export-produtos-pdf"><svg class="icon"><use href="#icon-relatorios"/></svg>Exportar PDF</button>
                             </div>
                         </div>
-                         <div style="overflow-x:auto;"><table class="data-table"><thead><tr><th>Produto</th><th>Unidades Vendidas</th><th>Lucro Total Gerado</th></tr></thead><tbody id="relatorio-produtos-rentaveis-table"></tbody></table></div>
+                         <div class="table-responsive-container"><table class="data-table"><thead><tr><th>Produto</th><th>Unidades Vendidas</th><th>Lucro Total Gerado</th></tr></thead><tbody id="relatorio-produtos-rentaveis-table"></tbody></table></div>
                     </div>
 
                 </div>
@@ -1004,10 +1080,11 @@
             const hamburgerMenu = document.getElementById('hamburger-menu');
             const sideMenu = document.getElementById('side-menu');
             const overlay = document.getElementById('overlay');
-            const menuLinks = document.querySelectorAll('.menu-link');
             const appHeaderTitle = document.querySelector('.app-header-title');
             const mainElement = document.querySelector('main');
-            const closeModalButtons = document.querySelectorAll('.close-modal, .btn-secondary[data-modal]');
+            const closeModalButtons = document.querySelectorAll('.close-modal');
+            const closeMenuBtn = document.getElementById('close-menu-btn');
+
 
             // --- ESTADO DA APLICAÇÃO ---
             let custosFixos = [];
@@ -1030,8 +1107,16 @@
             // --- LÓGICA DE NAVEGAÇÃO E MODAIS ---
             function openModal(modalId) { const modal = document.getElementById(modalId); if(modal) modal.classList.add('active'); }
             function closeModal(modalId) { const modal = document.getElementById(modalId); if(modal) modal.classList.remove('active'); }
-            closeModalButtons.forEach(btn => btn.addEventListener('click', () => closeModal(btn.dataset.modal)));
+            closeModalButtons.forEach(btn => btn.addEventListener('click', () => {
+                const modalId = btn.closest('.modal')?.id;
+                if(modalId) closeModal(modalId);
+            }));
             
+            function toggleMenu() {
+                sideMenu.classList.toggle('active');
+                overlay.classList.toggle('active');
+            }
+
             function showPage(pageId, pushState = true) {
                 if (pageId === 'planejamento-quitacao') {
                     popularDropdownDividas();
@@ -1055,11 +1140,12 @@
                     const activeLink = document.querySelector(`.menu-link[data-target="${pageId}"]`);
                     if(activeLink) activeLink.classList.add('active');
                 }
-                sideMenu.classList.remove('active'); overlay.classList.remove('active'); document.body.classList.remove('menu-open');
+                sideMenu.classList.remove('active'); overlay.classList.remove('active');
                 if (pushState) history.pushState({page: pageId}, `Página ${pageId}`, `#${pageId}`);
             }
-            hamburgerMenu?.addEventListener('click', () => { sideMenu.classList.add('active'); overlay.classList.add('active'); document.body.classList.remove('menu-open');});
-            overlay?.addEventListener('click', () => { sideMenu.classList.remove('active'); overlay.classList.remove('active'); document.body.classList.remove('menu-open');});
+            hamburgerMenu?.addEventListener('click', toggleMenu);
+            overlay?.addEventListener('click', toggleMenu);
+            closeMenuBtn?.addEventListener('click', toggleMenu);
             mainElement.addEventListener('click', (e) => {
                 if(e.target.closest('.menu-link')) {
                     e.preventDefault();
@@ -1094,7 +1180,7 @@
             // --- LÓGICA DA PÁGINA DE PRODUTOS (INTACTA) ---
             const btnNovoProduto = document.getElementById('btn-novo-produto'); const formProduto = document.getElementById('form-produto'); const listaProdutosEl = document.getElementById('lista-produtos'); const custoProdutoInput = document.getElementById('custo-produto'); const margemLucroSlider = document.getElementById('margem-lucro'); const variationTypeRadios = document.querySelectorAll('input[name="variation-type"]');
             function openProductModal(produto = null) { formProduto.reset(); document.getElementById('preview-foto').style.display = 'none'; document.getElementById('preview-foto').src = ''; document.getElementById('simple-variation-list').innerHTML = ''; document.getElementById('combined-variation-list').innerHTML = ''; if (produto) { document.getElementById('modal-produto-titulo').textContent = 'Editar Produto'; document.getElementById('produto-id').value = produto.id; document.getElementById('nome-produto').value = produto.nome; document.getElementById('custo-produto').value = produto.custo; document.getElementById('categoria-produto').value = produto.categoria; document.getElementById('margem-lucro').value = produto.margemLucro; if(produto.foto) { document.getElementById('preview-foto').src = produto.foto; document.getElementById('preview-foto').style.display = 'block'; } const variationType = produto.variationType || 'none'; document.querySelector(`input[name="variation-type"][value=${variationType}]`).checked = true; handleVariationTypeChange(); if(variationType === 'none'){ document.getElementById('estoque-produto').value = produto.estoque; } else if (variationType === 'simple'){ document.getElementById('simple-variation-name').value = produto.variationName; produto.variations.forEach(v => addSimpleVariationRow(v.name, v.stock)); } else if (variationType === 'combined'){ document.getElementById('combined-variation-name1').value = produto.attribute1.name; document.getElementById('combined-variation-values1').value = produto.attribute1.values.join(', '); document.getElementById('combined-variation-name2').value = produto.attribute2.name; document.getElementById('combined-variation-values2').value = produto.attribute2.values.join(', '); generateCombinations(produto.variations); } } else { document.getElementById('modal-produto-titulo').textContent = 'Novo Produto'; document.getElementById('produto-id').value = ''; document.querySelector('input[name="variation-type"][value=none]').checked = true; handleVariationTypeChange(); } updatePricing(); openModal('modal-produto'); }
-            function updatePricing() { const custoProduto = parseFloat(custoProdutoInput.value) || 0; const margemLucro = parseInt(margemLucroSlider.value) || 0; const custoTotal = custoProduto + custoUnitarioGlobal; const precoSugerido = custoTotal * (1 + (margemLucro / 100)); document.getElementById('custo-unitario-despesa').value = formatCurrency(custoUnitarioGlobal); document.getElementById('custo-total-produto').value = formatCurrency(custoTotal); document.getElementById('margem-lucro-valor').textContent = `${margemLucro}%`; document.getElementById('preco-sugerido').textContent = formatCurrency(precoSugerido); }
+            function updatePricing() { const custoProduto = parseFloat(custoProdutoInput.value) || 0; const margemLucro = parseInt(margemLucroSlider.value) || 0; const custoTotal = custoProduto + custoUnitarioGlobal; const precoSugerido = custoTotal / (1 - (margemLucro / 100)); document.getElementById('custo-unitario-despesa').value = formatCurrency(custoUnitarioGlobal); document.getElementById('custo-total-produto').value = formatCurrency(custoTotal); document.getElementById('margem-lucro-valor').textContent = `${margemLucro}%`; document.getElementById('preco-sugerido').textContent = formatCurrency(precoSugerido); }
             function renderizarProdutos() { if(!listaProdutosEl) return; listaProdutosEl.innerHTML = ''; if(produtos.length === 0) { listaProdutosEl.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 20px;">Nenhum produto cadastrado.</td></tr>`; return; } produtos.forEach(produto => { const tr = document.createElement('tr'); const totalEstoque = produto.variationType === 'none' ? produto.estoque : produto.variations.reduce((acc, v) => acc + (v.stock || 0), 0); tr.innerHTML = `<td><div class="product-info"><img src="${produto.foto || 'https://placehold.co/100x100/fbcfe8/831843?text=C4'}" alt="Foto de ${produto.nome}" class="product-img"><div><div class="product-name">${produto.nome}</div><div class="product-category">${produto.categoria.charAt(0).toUpperCase() + produto.categoria.slice(1)}</div></div></div></td><td>${formatCurrency(produto.precoSugerido)}</td><td>${totalEstoque} un.${produto.variationType !== 'none' ? `<span class="stock-detail">${produto.variations.length} variações</span>` : ''}</td><td><div class="actions"><button class="btn btn-sm btn-secondary edit-prod-btn" data-id="${produto.id}"><svg class="icon" style="width:16px; height:16px;"><use href="#icon-edit"/></svg></button><button class="btn btn-sm btn-danger delete-prod-btn" data-id="${produto.id}"><svg class="icon" style="width:16px; height:16px;"><use href="#icon-trash"/></svg></button></div></td>`; listaProdutosEl.appendChild(tr); }); updateProductDashboard(); }
             function updateProductDashboard() { const totalAtivosEl = document.getElementById('prod-ativos-total'); const maisEstoqueEl = document.getElementById('prod-mais-estoque'); const maisEstoqueQtdEl = document.getElementById('prod-mais-estoque-qtd'); if (totalAtivosEl) totalAtivosEl.textContent = produtos.length; if (produtos.length > 0) { const sortedByStock = [...produtos].sort((a, b) => { const stockA = a.variationType === 'none' ? a.estoque : a.variations.reduce((acc, v) => acc + v.stock, 0); const stockB = b.variationType === 'none' ? b.estoque : b.variations.reduce((acc, v) => acc + v.stock, 0); return stockB - stockA; }); const produtoMaisEstoque = sortedByStock[0]; const totalEstoque = produtoMaisEstoque.variationType === 'none' ? produtoMaisEstoque.estoque : produtoMaisEstoque.variations.reduce((acc, v) => acc + v.stock, 0); if (maisEstoqueEl) maisEstoqueEl.textContent = produtoMaisEstoque.nome; if (maisEstoqueQtdEl) maisEstoqueQtdEl.textContent = `${totalEstoque} unidades`; } else { if (maisEstoqueEl) maisEstoqueEl.textContent = 'N/A'; if (maisEstoqueQtdEl) maisEstoqueQtdEl.textContent = '0 unidades'; } }
             function handleVariationTypeChange(){ const selectedType = document.querySelector('input[name="variation-type"]:checked').value; document.querySelectorAll('.variation-container').forEach(c => c.classList.remove('active')); document.getElementById(`container-${selectedType === 'none' ? 'no' : selectedType}-variation`).classList.add('active'); }
@@ -1107,7 +1193,7 @@
             document.getElementById('upload-area')?.addEventListener('click', () => document.getElementById('foto-produto').click()); document.getElementById('foto-produto')?.addEventListener('change', function(e) { if(e.target.files && e.target.files[0]) { const reader = new FileReader(); reader.onload = function(event) { const preview = document.getElementById('preview-foto'); preview.src = event.target.result; preview.style.display = 'block'; }; reader.readAsDataURL(e.target.files[0]); } });
             formProduto?.addEventListener('submit', function(e) { e.preventDefault(); const id = document.getElementById('produto-id').value; const produtoData = { nome: document.getElementById('nome-produto').value, custo: parseFloat(document.getElementById('custo-produto').value), categoria: document.getElementById('categoria-produto').value, margemLucro: parseInt(document.getElementById('margem-lucro').value), precoSugerido: parseCurrency(document.getElementById('preco-sugerido').textContent), foto: document.getElementById('preview-foto').src, variationType: document.querySelector('input[name="variation-type"]:checked').value, variations: [], estoque: 0 }; if (produtoData.variationType === 'none') { produtoData.estoque = parseInt(document.getElementById('estoque-produto').value) || 0; } else if (produtoData.variationType === 'simple') { produtoData.variationName = document.getElementById('simple-variation-name').value; document.querySelectorAll('#simple-variation-list .variation-row').forEach(row => { produtoData.variations.push({ name: row.querySelector('.simple-variation-row-name').value, stock: parseInt(row.querySelector('.simple-variation-row-stock').value) || 0 }); }); } else if (produtoData.variationType === 'combined') { produtoData.attribute1 = { name: document.getElementById('combined-variation-name1').value, values: document.getElementById('combined-variation-values1').value.split(',').map(v => v.trim()) }; produtoData.attribute2 = { name: document.getElementById('combined-variation-name2').value, values: document.getElementById('combined-variation-values2').value.split(',').map(v => v.trim()) }; document.querySelectorAll('#combined-variation-list .variation-row').forEach(row => { produtoData.variations.push({ attr1: row.querySelector('.combined-variation-row-v1').value, attr2: row.querySelector('.combined-variation-row-v2').value, stock: parseInt(row.querySelector('.combined-variation-row-stock').value) || 0 }); }); } if (id) { const index = produtos.findIndex(p => p.id == id); produtos[index] = { ...produtos[index], ...produtoData }; } else { produtoData.id = Date.now(); produtos.push(produtoData); } renderizarProdutos(); closeModal('modal-produto'); });
              
-            // --- LÓGICA DA PÁGINA DE VENDAS (ATUALIZADA) ---
+            // --- LÓGICA DA PÁGINA DE VENDAS (INTACTA) ---
             const btnNovaVenda = document.getElementById('btn-nova-venda');
             const formVenda = document.getElementById('form-venda');
             const btnAdicionarItemVenda = document.getElementById('btn-adicionar-item-venda');
@@ -1116,7 +1202,7 @@
             const saleSummaryEl = document.getElementById('sale-summary');
             const saleDiscountValueInput = document.getElementById('sale-discount-value');
             const saleDiscountTypeInput = document.getElementById('sale-discount-type');
-            function renderizarVendas() { const listaVendasEl = document.getElementById('lista-vendas'); if(!listaVendasEl) return; listaVendasEl.innerHTML = ''; if(vendas.length === 0) { listaVendasEl.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 20px;">Nenhuma venda registrada.</td></tr>`; } else { vendas.forEach(venda => { const tr = document.createElement('tr'); tr.innerHTML = `<td>${venda.clienteNome || 'N/A'}</td> <td>${venda.items.length} item(s)</td> <td>${formatCurrency(venda.total)}</td> <td>${formatDate(venda.data)}</td> <td><span class="status-badge pago">Pago</span></td>`; listaVendasEl.appendChild(tr); }); } renderizarDashboardVendas(); }
+            function renderizarVendas() { const listaVendasEl = document.getElementById('lista-vendas'); if(!listaVendasEl) return; listaVendasEl.innerHTML = ''; if(vendas.length === 0) { listaVendasEl.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 20px;">Nenhuma venda registrada.</td></tr>`; } else { vendas.forEach(venda => { const tr = document.createElement('tr'); tr.innerHTML = `<td>${venda.clienteNome || 'N/A'}</td> <td>${venda.items.length} item(s)</td> <td>${formatCurrency(venda.total)}</td> <td>${formatDate(venda.data)}</td> <td><span class="status-badge pago">Pago</span></td>`; listaVendasEl.appendChild(tr); }); } renderizarDashboardVendas(); renderizarDashboardPrincipal(); }
             function renderizarDashboardVendas() {
                 const pedidosMesEl = document.getElementById('vendas-pedidos-mes'); 
                 const faturamentoBrutoEl = document.getElementById('vendas-faturamento-bruto'); 
@@ -1129,13 +1215,13 @@
                 const primeiroDiaMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
                 const ultimoDiaMes = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0);
 
+                const { lucroLiquidoVendas, faturamentoBruto, vendasCount } = getLucroLiquidoPeriodo(primeiroDiaMes, ultimoDiaMes);
+
+                pedidosMesEl.textContent = vendasCount; 
+                faturamentoBrutoEl.textContent = formatCurrency(faturamentoBruto); 
+                lucroLiquidoEl.textContent = formatCurrency(lucroLiquidoVendas);
+
                 const vendasMes = vendas.filter(v => new Date(v.data) >= primeiroDiaMes && new Date(v.data) <= ultimoDiaMes);
-                const lucroLiquidoMes = getLucroLiquidoPeriodo(primeiroDiaMes, ultimoDiaMes);
-
-                pedidosMesEl.textContent = vendasMes.length; 
-                faturamentoBrutoEl.textContent = formatCurrency(vendasMes.reduce((acc, venda) => acc + venda.total, 0)); 
-                lucroLiquidoEl.textContent = formatCurrency(lucroLiquidoMes);
-
                 if (vendasMes.length > 0) { const itemCounts = {}; vendasMes.forEach(venda => { venda.items.forEach(item => { itemCounts[item.nome] = (itemCounts[item.nome] || 0) + item.quantidade; }); }); const maisVendido = Object.keys(itemCounts).sort((a,b) => itemCounts[b] - itemCounts[a])[0]; itemMaisVendidoEl.textContent = maisVendido || 'N/A'; } else { itemMaisVendidoEl.textContent = 'N/A'; } 
             }
             function openVendaModal() { formVenda.reset(); currentSaleItems = []; renderCurrentSaleItems(); updateSaleSummary(); openModal('modal-venda'); }
@@ -1172,32 +1258,30 @@
             function renderizarDividas() { if(!listaDividasEl) return; listaDividasEl.innerHTML = ''; if(dividas.length === 0) { listaDividasEl.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 20px;">Nenhuma dívida cadastrada. Que ótimo!</td></tr>`; } else { dividas.sort((a,b) => { const prioridades = { alta: 3, media: 2, baixa: 1 }; return prioridades[b.prioridade] - prioridades[a.prioridade];}).forEach(divida => { const valorRestante = divida.valorTotal - divida.valorPago; const progresso = divida.valorTotal > 0 ? (divida.valorPago / divida.valorTotal) * 100 : 0; const tr = document.createElement('tr'); tr.innerHTML = `<td><div>${divida.nome}</div>${divida.temParcelas ? `<div class="product-category">Próx. Venc: ${formatDate(divida.vencimento)} (${divida.parcelasFaltam}x)</div>` : `<div class="product-category">Venc: ${formatDate(divida.vencimento)}</div>`}</td><td>${formatCurrency(valorRestante)}</td><td><div class="progress-bar-container"><div class="progress-bar"><div class="progress" style="width: ${progresso}%;"></div></div><p class="progress-label">${progresso.toFixed(0)}%</p></div></td><td><span class="priority-badge ${divida.prioridade}">${divida.prioridade.charAt(0).toUpperCase() + divida.prioridade.slice(1)}</span></td><td><div class="actions"><button class="btn btn-sm btn-secondary edit-divida-btn" data-id="${divida.id}"><svg class="icon" style="width:16px; height:16px;"><use href="#icon-edit"/></svg></button><button class="btn btn-sm btn-danger delete-divida-btn" data-id="${divida.id}"><svg class="icon" style="width:16px; height:16px;"><use href="#icon-trash"/></svg></button></div></td>`; listaDividasEl.appendChild(tr); }) } renderizarDashboardLiberdadeFinanceira(); }
             function renderizarDashboardLiberdadeFinanceira() {
                 const lfTotalDividasEl = document.getElementById('lf-total-dividas');
+                if (!lfTotalDividasEl) return;
+
                 const lfProgressoGeralEl = document.getElementById('lf-progresso-geral');
                 const lfProgressoGeralLabelEl = document.getElementById('lf-progresso-geral-label');
                 const lfMaiorDividaEl = document.getElementById('lf-maior-divida');
                 const lfMaiorDividaValorEl = document.getElementById('lf-maior-divida-valor');
+                const totalDividas = dividas.reduce((acc, d) => acc + d.valorTotal, 0);
+                const totalPago = dividas.reduce((acc, d) => acc + d.valorPago, 0);
+                const totalRestante = totalDividas - totalPago;
+                const progressoGeral = totalDividas > 0 ? (totalPago / totalDividas) * 100 : 0;
+                
+                lfTotalDividasEl.textContent = formatCurrency(totalRestante);
+                if(lfProgressoGeralEl) lfProgressoGeralEl.style.width = `${progressoGeral}%`;
+                if(lfProgressoGeralLabelEl) lfProgressoGeralLabelEl.textContent = `${progressoGeral.toFixed(0)}% quitado`;
 
-                if (lfTotalDividasEl) {
-                    const totalDividas = dividas.reduce((acc, d) => acc + d.valorTotal, 0);
-                    const totalPago = dividas.reduce((acc, d) => acc + d.valorPago, 0);
-                    const totalRestante = totalDividas - totalPago;
-                    const progressoGeral = totalDividas > 0 ? (totalPago / totalDividas) * 100 : 0;
-                    
-                    lfTotalDividasEl.textContent = formatCurrency(totalRestante);
-                    if(lfProgressoGeralEl) lfProgressoGeralEl.style.width = `${progressoGeral}%`;
-                    if(lfProgressoGeralLabelEl) lfProgressoGeralLabelEl.textContent = `${progressoGeral.toFixed(0)}% quitado`;
-
-                    renderizarCardMetaDividas();
-
-                    const maiorDivida = [...dividas].sort((a, b) => (b.valorTotal - b.valorPago) - (a.valorTotal - a.valorPago))[0];
-                    if(maiorDivida) {
-                        if(lfMaiorDividaEl) lfMaiorDividaEl.textContent = maiorDivida.nome;
-                        if(lfMaiorDividaValorEl) lfMaiorDividaValorEl.textContent = formatCurrency(maiorDivida.valorTotal - maiorDivida.valorPago);
-                    } else {
-                         if(lfMaiorDividaEl) lfMaiorDividaEl.textContent = "N/A";
-                         if(lfMaiorDividaValorEl) lfMaiorDividaValorEl.textContent = "";
-                    }
+                const maiorDivida = [...dividas].sort((a, b) => (b.valorTotal - b.valorPago) - (a.valorTotal - a.valorPago))[0];
+                if(maiorDivida) {
+                    if(lfMaiorDividaEl) lfMaiorDividaEl.textContent = maiorDivida.nome;
+                    if(lfMaiorDividaValorEl) lfMaiorDividaValorEl.textContent = formatCurrency(maiorDivida.valorTotal - maiorDivida.valorPago);
+                } else {
+                     if(lfMaiorDividaEl) lfMaiorDividaEl.textContent = "N/A";
+                     if(lfMaiorDividaValorEl) lfMaiorDividaValorEl.textContent = "";
                 }
+                renderizarDashboardPrincipal();
             }
             function openDividaModal(divida = null) {
                 formDivida.reset();
@@ -1347,12 +1431,20 @@
             }
 
             function calcularPromocao(){
-                const precoAtual = parseFloat(document.getElementById('calc-promo-preco-atual')?.value) || 0;
-                const custo = parseFloat(document.getElementById('calc-promo-custo')?.value) || 0;
+                const select = document.getElementById('calc-promo-produto');
+                const produtoId = select?.value;
+                const produto = produtos.find(p => p.id == produtoId);
+                const precoAtual = produto ? produto.precoSugerido : 0;
+                const custo = produto ? produto.custo : 0;
+                
+                document.getElementById('calc-promo-preco-atual').value = formatCurrency(precoAtual);
+                document.getElementById('calc-promo-custo').value = formatCurrency(custo);
+
                 const desconto = parseFloat(document.getElementById('calc-promo-desconto')?.value) || 0;
                 const novoPreco = precoAtual * (1 - (desconto / 100));
                 const novoLucro = novoPreco - custo;
                 const novaMargem = novoPreco > 0 ? (novoLucro / novoPreco) * 100 : 0;
+
                 document.getElementById('calc-promo-novo-preco').textContent = formatCurrency(novoPreco);
                 document.getElementById('calc-promo-novo-lucro').textContent = formatCurrency(novoLucro);
                 document.getElementById('calc-promo-nova-margem').textContent = `${novaMargem.toFixed(0)}%`;
@@ -1423,8 +1515,16 @@
                         return itemAcc + (produto ? produto.custo * item.quantidade : 0);
                     }, 0);
                 }, 0);
+                
+                const despesasPeriodo = fluxoCaixa.filter(t => t.tipo === 'saida' && new Date(t.data) >= startDate && new Date(t.data) <= endDate);
+                const totalDespesas = despesasPeriodo.reduce((acc, d) => acc + d.valor, 0);
+                
+                const lucroLiquidoDashboard = faturamentoBruto - custoProdutosVendidos - totalDespesas;
+                
+                // Este é o lucro apenas das vendas, sem outras despesas.
+                const lucroLiquidoVendas = faturamentoBruto - custoProdutosVendidos;
 
-                return faturamentoBruto - custoProdutosVendidos;
+                return { lucroLiquidoDashboard, lucroLiquidoVendas, faturamentoBruto, vendasCount: vendasPeriodo.length };
             }
 
             function setupCalculadoras() {
@@ -1433,8 +1533,8 @@
                 const hoje = new Date();
                 const primeiroDiaMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
                 const ultimoDiaMes = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0);
-                const lucroLiquidoPeriodo = getLucroLiquidoPeriodo(primeiroDiaMes, ultimoDiaMes);
-                document.getElementById('calc-reinvest-lucro').value = lucroLiquidoPeriodo > 0 ? lucroLiquidoPeriodo.toFixed(2) : '0.00';
+                const { lucroLiquidoDashboard } = getLucroLiquidoPeriodo(primeiroDiaMes, ultimoDiaMes);
+                document.getElementById('calc-reinvest-lucro').value = lucroLiquidoDashboard > 0 ? lucroLiquidoDashboard.toFixed(2) : '0.00';
 
                 const selectPromo = document.getElementById('calc-promo-produto');
                 selectPromo.innerHTML = '<option value="">Selecione um produto...</option>';
@@ -1493,7 +1593,7 @@
 
                 const faturamentoBruto = vendasFiltradas.reduce((acc, v) => acc + v.total, 0);
                 const totalDespesas = despesasFiltradas.reduce((acc, d) => acc + d.valor, 0);
-                const lucroLiquido = getLucroLiquidoPeriodo(dataInicio, dataFim) - totalDespesas;
+                const lucroLiquido = getLucroLiquidoPeriodo(dataInicio, dataFim).lucroLiquidoDashboard;
                 
                 document.getElementById('relatorio-faturamento').textContent = formatCurrency(faturamentoBruto);
                 document.getElementById('relatorio-lucro').textContent = formatCurrency(lucroLiquido);
@@ -1570,6 +1670,60 @@
             btnGerarRelatorio?.addEventListener('click', gerarRelatorios);
             document.querySelectorAll('#relatorios .btn-secondary').forEach(btn => btn.addEventListener('click', () => alert('Funcionalidade de exportação em desenvolvimento.')));
 
+            // --- FUNÇÃO DE RENDERIZAÇÃO DO DASHBOARD PRINCIPAL (NOVA) ---
+            function renderizarDashboardPrincipal() {
+                const faturamentoEl = document.getElementById('dashboard-faturamento');
+                if(!faturamentoEl) return; // Se não está na página do dashboard, não faz nada
+                
+                const lucroEl = document.getElementById('dashboard-lucro');
+                const pedidosEl = document.getElementById('dashboard-pedidos');
+                const pieChartEl = document.getElementById('vendas-pie-chart');
+                const legendEl = document.getElementById('vendas-legend');
+                
+                const hoje = new Date();
+                const primeiroDiaMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
+                const ultimoDiaMes = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0);
+                
+                const { lucroLiquidoDashboard, faturamentoBruto, vendasCount } = getLucroLiquidoPeriodo(primeiroDiaMes, ultimoDiaMes);
+                
+                faturamentoEl.textContent = formatCurrency(faturamentoBruto);
+                lucroEl.textContent = formatCurrency(lucroLiquidoDashboard);
+                pedidosEl.textContent = vendasCount;
+
+                // Renderizar o gráfico de pizza
+                const vendasMes = vendas.filter(v => new Date(v.data) >= primeiroDiaMes && new Date(v.data) <= ultimoDiaMes);
+                const vendasPorCategoria = vendasMes.reduce((acc, venda) => {
+                    venda.items.forEach(item => {
+                        const produto = produtos.find(p => p.id === item.produtoId);
+                        if(produto){
+                            acc[produto.categoria] = (acc[produto.categoria] || 0) + item.precoUnitario * item.quantidade;
+                        }
+                    });
+                    return acc;
+                }, {});
+
+                const totalVendas = Object.values(vendasPorCategoria).reduce((sum, v) => sum + v, 0);
+                let gradient = 'conic-gradient(';
+                let currentAngle = 0;
+                const cores = { bolsa: '#2dd4bf', calcado: '#f8b81f', perfumaria: '#f472b6', maquiagem: '#a78bfa', skincare: '#60a5fa', acessorio: '#ec4899', default: '#a8a29e' };
+                legendEl.innerHTML = '';
+                
+                Object.entries(vendasPorCategoria).forEach(([categoria, valor]) => {
+                    const percent = totalVendas > 0 ? (valor / totalVendas) * 100 : 0;
+                    const endAngle = currentAngle + (percent * 3.6);
+                    const cor = cores[categoria] || cores.default;
+                    if(percent > 0) {
+                        gradient += `${cor} ${currentAngle}deg ${endAngle}deg, `;
+                        const li = document.createElement('li');
+                        li.className = 'legend-item';
+                        li.innerHTML = `<span class="legend-color" style="background-color: ${cor}"></span>${categoria.charAt(0).toUpperCase() + categoria.slice(1)}`;
+                        legendEl.appendChild(li);
+                    }
+                    currentAngle = endAngle;
+                });
+                 gradient = gradient.length > 15 ? gradient.slice(0, -2) + ')' : '#f1f5f9';
+                pieChartEl.style.background = gradient;
+            }
 
             // --- INICIALIZAÇÃO DA APLICAÇÃO ---
             function init() {
@@ -1612,7 +1766,7 @@
                     }, 2000);
                 }
                 
-                const initialPage = window.location.hash.substring(1) || 'calculadoras';
+                const initialPage = window.location.hash.substring(1) || 'dashboard';
                 showPage(initialPage, false);
             }
             init();
