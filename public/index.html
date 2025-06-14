@@ -269,6 +269,12 @@
         .variation-row.combined { grid-template-columns: 1fr 1fr 100px 50px; }
         .variation-header { display: grid; grid-template-columns: 1fr 100px 50px; gap: 10px; margin-bottom: 5px; font-size: 0.8rem; font-weight: 600; color: var(--cor-texto-secundario); padding: 0 5px; }
         .variation-header.combined { grid-template-columns: 1fr 1fr 100px 50px; }
+        
+        /* Nova Seção: Despesas Percentuais */
+        .percent-expense-add { display: grid; grid-template-columns: 1fr 100px auto; gap: 10px; align-items: flex-end; }
+        .percent-expense-list { list-style: none; margin-top: 10px; }
+        .percent-expense-item { display: flex; justify-content: space-between; align-items: center; padding: 8px; background-color: #fdf2f8; border-radius: 6px; margin-bottom: 5px; }
+        .percent-expense-item span { font-weight: 500; }
 
         /* Componentes da Página de Vendas */
         .sale-item-list, .product-selection-list { list-style: none; margin-top: 15px; }
@@ -331,6 +337,54 @@
             position: relative;
         }
 
+        /* ----- NOVOS ESTILOS PARA RECEITAS (PRODUÇÃO) ----- */
+        .recipe-list {
+            list-style: none;
+            margin-top: 20px;
+        }
+        .recipe-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background-color: #fdf2f8;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+        .recipe-item-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        .recipe-item-info {
+            flex-grow: 1;
+        }
+        .recipe-item-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .recipe-item-cost {
+            font-size: 0.9rem;
+            color: var(--cor-texto-secundario);
+        }
+        .recipe-item-cost strong {
+            color: var(--cor-principal);
+        }
+        .add-insumo-form {
+            display: grid;
+            grid-template-columns: 1fr 120px 100px;
+            gap: 10px;
+            align-items: flex-end;
+            margin-bottom: 15px;
+        }
+        #unidade-medida-selecionada {
+            font-size: 0.9rem;
+            color: var(--cor-texto-secundario);
+            align-self: center;
+            padding-bottom: 14px;
+        }
+
         /* ------------------- */
         /* RESPONSIVIDADE */
         /* ------------------- */
@@ -344,6 +398,9 @@
             }
             .list-header .actions .btn-sm {
                 flex-grow: 1;
+            }
+            .add-insumo-form {
+                grid-template-columns: 1fr;
             }
         }
         
@@ -376,6 +433,7 @@
         <symbol id="icon-produtos" viewBox="0 0 24 24"><path fill="currentColor" d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.22-1.05-.59-1.42zM13 20.01L4 11V4h7l9 9-7 7.01z"/><circle cx="6.5" cy="6.5" r="1.5" fill="currentColor"/></symbol>
         <symbol id="icon-vendas" viewBox="0 0 24 24"><path fill="currentColor" d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1z"/></symbol>
         <symbol id="icon-caixa" viewBox="0 0 24 24"><path fill="currentColor" d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></symbol>
+        <symbol id="icon-producao" viewBox="0 0 24 24"><path fill="currentColor" d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49 1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></symbol>
         <symbol id="icon-arrow-up" viewBox="0 0 24 24"><path fill="currentColor" d="M7 14l5-5 5 5z"/></symbol>
         <symbol id="icon-arrow-down" viewBox="0 0 24 24"><path fill="currentColor" d="M7 10l5 5 5-5z"/></symbol>
         <symbol id="icon-calculadora" viewBox="0 0 24 24"><path fill="currentColor" d="M7 2h10v2h-2v2h2v2h-2v2h2v2h-2v2H7V2zm4 14h2v2h-2v-2zM7 18h10v2h-2v2h-2v-2h-2v2H9v-2H7v-2zM19 2H5v14h14V2zm-2 12H7V4h10v10z"/></symbol>
@@ -396,6 +454,7 @@
             <li><a href="#" class="menu-link" data-target="dashboard"><svg class="icon"><use href="#icon-dashboard"/></svg>Dashboard</a></li>
             <li><a href="#" class="menu-link" data-target="despesas"><svg class="icon"><use href="#icon-despesas"/></svg>Despesas</a></li>
             <li><a href="#" class="menu-link" data-target="produtos"><svg class="icon"><use href="#icon-produtos"/></svg>Produtos</a></li>
+            <li><a href="#" class="menu-link" data-target="producao"><svg class="icon"><use href="#icon-producao"/></svg>Produção</a></li>
             <li><a href="#" class="menu-link" data-target="vendas"><svg class="icon"><use href="#icon-vendas"/></svg>Vendas</a></li>
             <li><a href="#" class="menu-link" data-target="fluxo-caixa"><svg class="icon"><use href="#icon-caixa"/></svg>Fluxo de Caixa</a></li>
             <li><a href="#" class="menu-link" data-target="calculadoras"><svg class="icon"><use href="#icon-calculadora"/></svg>Calculadoras</a></li>
@@ -416,7 +475,7 @@
         </header>
 
         <main>
-            <!-- PÁGINA DASHBOARD (ATUALIZADA) -->
+            <!-- PÁGINA DASHBOARD -->
             <section id="dashboard" class="page">
                 <h2 class="page-title">Bem-vinda ao C4!</h2>
                 <p class="page-subtitle">Seu painel financeiro para o sucesso.</p>
@@ -440,7 +499,7 @@
                 </div>
             </section>
             
-            <!-- PÁGINA DESPESAS (INTACTA) -->
+            <!-- PÁGINA DESPESAS -->
             <section id="despesas" class="page">
                 <h2 class="page-title">Controle de Despesas</h2>
                 <p class="page-subtitle">Entenda seus custos para precificar corretamente.</p>
@@ -462,10 +521,10 @@
                     <div class="card">
                         <h3 class="card-title">Custos Variáveis <div class="info-tooltip"><svg class="icon"><use href="#icon-info"></use></svg><span class="tooltip-text">Custos que variam com suas vendas (ex: comissão, taxas de cartão).</span></div></h3>
                         <form id="form-custo-variavel">
-                             <div class="form-group full-width"><label for="nome-custo-variavel">Nome do Custo</label><input type="text" id="nome-custo-variavel" placeholder="Ex: Comissão Vendedora" required></div>
-                             <div class="form-grid">
-                                 <div class="form-group"><label for="valor-custo-variavel">Valor</label><input type="number" id="valor-custo-variavel" placeholder="10" step="0.01" required></div>
-                                 <div class="form-group"><label for="tipo-custo-variavel">Tipo</label><select id="tipo-custo-variavel"><option value="percent">%</option><option value="real">R$</option></select></div>
+                             <div class="form-group full-width"><label for="nome-custo-variavel">Nome do Custo</label><input type="text" id="nome-custo-variavel" placeholder="Ex: Embalagem por venda" required></div>
+                             <div class="form-group full-width">
+                                 <label for="valor-custo-variavel">Valor (R$)</label>
+                                 <input type="number" id="valor-custo-variavel" placeholder="2.50" step="0.01" required>
                              </div>
                              <button type="submit" class="btn btn-primary">Adicionar Custo Variável</button>
                         </form>
@@ -478,11 +537,10 @@
                         <div class="main-grid">
                              <div>
                                 <div class="form-group"><label for="valor-frete">Soma dos Fretes do Mês (R$)</label><input type="number" id="valor-frete" class="calculator-input" placeholder="Ex: 85.00" step="0.01"></div>
-                                <div class="form-group"><label for="valor-impostos">Imposto sobre Venda (%)</label><input type="number" id="valor-impostos" class="calculator-input" placeholder="Ex: 4 (para MEI)" step="0.01"></div>
+                                <div class="form-group"><label for="meta-vendas">Quantas peças você estima vender por mês?</label><input type="number" id="meta-vendas" class="calculator-input" placeholder="Ex: 100" required></div>
                              </div>
                              <div>
-                                <div class="form-group"><label for="meta-vendas">Quantas peças você estima vender por mês?</label><input type="number" id="meta-vendas" class="calculator-input" placeholder="Ex: 100" required></div>
-                                <div class="simulation-result" style="margin-top:0; padding: 10px; background-color:#fdf2f8; border-radius: 8px;">
+                                <div class="simulation-result" style="padding: 10px; background-color:#fdf2f8; border-radius: 8px; min-height: 110px; display: flex; flex-direction: column; justify-content: center;">
                                     <p>Custo por Unidade Vendida</p>
                                     <h3 id="custo-unitario-final" style="margin-top:0;">R$ 0,00</h3>
                                 </div>
@@ -492,7 +550,7 @@
                 </div>
             </section>
             
-            <!-- PÁGINA PRODUTOS (INTACTA) -->
+            <!-- PÁGINA PRODUTOS -->
             <section id="produtos" class="page">
                 <h2 class="page-title">Gestão de Produtos</h2>
                 <p class="page-subtitle">Cadastre e organize seus produtos e suas variações.</p>
@@ -521,8 +579,92 @@
                     </div>
                 </div>
             </section>
+
+            <!-- PÁGINA PRODUÇÃO (MODIFICADA) -->
+            <section id="producao" class="page">
+                <h2 class="page-title">Controle de Produção</h2>
+                <p class="page-subtitle">Gerencie seus insumos, receitas e planeje sua produção.</p>
+                <div class="main-grid">
+                    <div class="card">
+                        <div class="list-header">
+                            <h3 class="card-title" style="margin-bottom:0;">Insumos</h3>
+                        </div>
+                        <p class="detail" style="margin-bottom: 20px;">Cadastre a matéria-prima e os componentes utilizados para criar seus produtos.</p>
+                        
+                        <form id="form-insumo">
+                            <input type="hidden" id="insumo-id">
+                            <div class="form-group full-width">
+                                <label for="nome-insumo">Nome do Insumo</label>
+                                <input type="text" id="nome-insumo" placeholder="Ex: Tecido de algodão" required>
+                            </div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="unidade-medida-insumo">Unidade de Medida</label>
+                                    <select id="unidade-medida-insumo" required>
+                                        <option value="un">Unidade (un)</option>
+                                        <option value="kg">Quilograma (kg)</option>
+                                        <option value="g">Grama (g)</option>
+                                        <option value="m">Metro (m)</option>
+                                        <option value="cm">Centímetro (cm)</option>
+                                        <option value="l">Litro (l)</option>
+                                        <option value="ml">Mililitro (ml)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="custo-insumo">Custo por Unidade (R$)</label>
+                                    <input type="number" id="custo-insumo" placeholder="25.50" step="0.01" required>
+                                </div>
+                            </div>
+                             <div class="form-group full-width">
+                                <label for="estoque-insumo">Estoque Atual</label>
+                                <input type="number" id="estoque-insumo" placeholder="100" step="1" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Adicionar Insumo</button>
+                        </form>
+                        
+                        <div class="table-responsive-container" style="margin-top: 20px;">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Insumo</th>
+                                        <th>Custo</th>
+                                        <th>Estoque</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="lista-insumos">
+                                    <!-- Linhas de insumos serão inseridas aqui -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                    <div class="card">
+                        <div class="list-header">
+                            <h3 class="card-title" style="margin-bottom:0;">Produtos (Receitas)</h3>
+                            <button class="btn btn-primary" id="btn-criar-receita"><svg class="icon"><use href="#icon-plus"/></svg>Criar Nova Receita</button>
+                        </div>
+                        <p class="detail">Crie as "receitas" ou fichas técnicas dos seus produtos, definindo os insumos necessários.</p>
+                        <div id="lista-receitas" class="recipe-list">
+                            <!-- Lista de receitas salvas será inserida aqui -->
+                        </div>
+                    </div>
+                </div>
+                 <div class="main-grid">
+                    <div class="card">
+                        <h3 class="card-title">Planejamento de Produção</h3>
+                        <p class="detail">Planeje e inicie novas ordens de produção baseadas em suas receitas.</p>
+                         <!-- Conteúdo do card de Produção virá aqui -->
+                    </div>
+                    <div class="card">
+                        <h3 class="card-title">Controle de Estoque</h3>
+                        <p class="detail">Monitore o estoque de insumos e receba alertas para reposição.</p>
+                         <!-- Conteúdo do card de Controle de Estoque virá aqui -->
+                    </div>
+                </div>
+            </section>
             
-            <!-- PÁGINA DE VENDAS (INTACTA) -->
+            <!-- PÁGINA DE VENDAS -->
             <section id="vendas" class="page">
                 <h2 class="page-title">Gestão de Vendas</h2>
                 <p class="page-subtitle">Registre suas vendas e acompanhe seu faturamento.</p>
@@ -556,7 +698,7 @@
                 </div>
             </section>
             
-            <!-- PÁGINA FLUXO DE CAIXA (INTACTA) -->
+            <!-- PÁGINA FLUXO DE CAIXA -->
             <section id="fluxo-caixa" class="page">
                 <h2 class="page-title">Fluxo de Caixa</h2>
                 <p class="page-subtitle">Acompanhe as entradas e saídas do seu negócio.</p>
@@ -585,7 +727,7 @@
                 </div>
             </section>
 
-             <!-- PÁGINA LIBERDADE FINANCEIRA (INTACTA) -->
+             <!-- PÁGINA LIBERDADE FINANCEIRA -->
             <section id="liberdade-financeira" class="page">
                 <h2 class="page-title">Liberdade Financeira</h2>
                 <p class="page-subtitle">Organize e planeje a quitação das suas dívidas.</p>
@@ -624,7 +766,7 @@
                 </div>
             </section>
 
-             <!-- PÁGINA PLANEJAMENTO QUITAÇÃO (INTACTA) -->
+             <!-- PÁGINA PLANEJAMENTO QUITAÇÃO -->
             <section id="planejamento-quitacao" class="page">
                  <h2 class="page-title">Planejar Quitação</h2>
                  <p class="page-subtitle">Defina sua estratégia para alcançar a liberdade financeira.</p>
@@ -690,8 +832,8 @@
                  </div>
             </section>
 
-            <!-- PÁGINA CALCULADORAS (ATUALIZADA) -->
-            <section id="calculadoras" class="page active">
+            <!-- PÁGINA CALCULADORAS -->
+            <section id="calculadoras" class="page">
                 <h2 class="page-title">Calculadoras Inteligentes</h2>
                 <p class="page-subtitle">Ferramentas rápidas para decisões financeiras mais assertivas.</p>
 
@@ -881,15 +1023,41 @@
         </main>
     </div>
 
-    <!-- MODAL DE CADASTRO DE PRODUTO (INTACTO) -->
+    <!-- MODAL DE CADASTRO DE PRODUTO -->
     <div class="modal" id="modal-produto">
         <div class="modal-content">
             <div class="modal-header"> <h3 class="modal-title" id="modal-produto-titulo">Novo Produto</h3> <button class="close-modal" data-modal="modal-produto">&times;</button> </div>
-            <form id="form-produto"> <input type="hidden" id="produto-id"> <div class="upload-area" id="upload-area"> <svg class="icon" style="width:40px; height:40px; color: var(--cor-texto-secundario); margin-bottom:10px;"><use href="#icon-upload"/></svg> <p>Clique para enviar uma foto</p> <input type="file" id="foto-produto" accept="image/*" style="display:none;"> <img id="preview-foto" src="" alt="Preview da foto" style="max-width: 100px; max-height: 100px; display: none; margin-top: 10px; border-radius: 8px;"> </div> <div class="form-group full-width"> <label for="nome-produto">Nome do Produto</label> <input type="text" id="nome-produto" required placeholder="Ex: Bolsa de Couro Luxo"> </div> <div class="form-grid"> <div class="form-group"> <label for="custo-produto">Custo do Produto (R$)</label> <input type="number" step="0.01" id="custo-produto" required placeholder="55.00"> </div> <div class="form-group"> <label for="categoria-produto">Categoria</label> <select id="categoria-produto" required> <option value="bolsa">Bolsa</option> <option value="calcado">Calçado</option> <option value="roupa">Roupa</option> <option value="perfumaria">Perfumaria</option> <option value="maquiagem">Maquiagem</option> <option value="skincare">Skincare</option> <option value="acessorio">Acessório</option> </select> </div> </div> <div class="form-section"> <label>Estoque e Variações</label> <div class="variation-type-selector"> <input type="radio" name="variation-type" id="type-none" value="none" checked> <label for="type-none">Produto Único</label> <input type="radio" name="variation-type" id="type-simple" value="simple"> <label for="type-simple">Variação Simples</label> <input type="radio" name="variation-type" id="type-combined" value="combined"> <label for="type-combined">Variação Combinada</label> </div> <div id="container-no-variation" class="variation-container active"> <div class="form-group full-width"> <label for="estoque-produto">Quantidade em Estoque</label> <input type="number" id="estoque-produto" placeholder="50"> </div> </div> <div id="container-simple-variation" class="variation-container"> <div class="form-group full-width"> <label for="simple-variation-name">Nome da Variação (Ex: Tamanho)</label> <input type="text" id="simple-variation-name" placeholder="Tamanho"> </div> <div id="simple-variation-header" class="variation-header" style="display: none;"> <span>Valor da Variação</span> <span>Estoque</span> <span></span> </div> <div id="simple-variation-list"></div> <button type="button" id="add-simple-variation-btn" class="btn btn-secondary btn-sm" style="width: auto; margin-top: 10px;">Adicionar Variação</button> </div> <div id="container-combined-variation" class="variation-container"> <div class="form-grid"> <div class="form-group"> <label for="combined-variation-name1">Atributo 1 (Ex: Cor)</label> <input type="text" id="combined-variation-name1" placeholder="Cor"> </div> <div class="form-group"> <label for="combined-variation-values1">Valores (separados por vírgula)</label> <input type="text" id="combined-variation-values1" placeholder="Preto, Nude, Branco"> </div> </div> <div class="form-grid"> <div class="form-group"> <label for="combined-variation-name2">Atributo 2 (Ex: Tamanho)</label> <input type="text" id="combined-variation-name2" placeholder="Tamanho"> </div> <div class="form-group"> <label for="combined-variation-values2">Valores (separados por vírgula)</label> <input type="text" id="combined-variation-values2" placeholder="34, 35, 36"> </div> </div> <button type="button" id="generate-combinations-btn" class="btn btn-secondary" style="margin-bottom: 20px;">Gerar Combinações</button> <div id="combined-variation-header" class="variation-header combined" style="display: none;"> <span id="header-attr1">Atributo 1</span> <span id="header-attr2">Atributo 2</span> <span>Estoque</span> <span></span> </div> <div id="combined-variation-list"></div> </div> </div> <div class="form-section"> <label>Precificação Inteligente</label> <div class="form-grid"> <div class="form-group"> <label for="custo-unitario-despesa" style="font-size:0.8rem; color: var(--cor-texto-secundario)">+ Custo Unitário (Despesas)</label> <input type="text" id="custo-unitario-despesa" readonly> </div> <div class="form-group"> <label for="custo-total-produto" style="font-size:0.8rem; color: var(--cor-texto-secundario)">= Custo Total do Produto</label> <input type="text" id="custo-total-produto" readonly> </div> </div> <div class="form-group full-width slider-group"> <label for="margem-lucro">Margem de Lucro Desejada</label> <div class="slider-container"> <input type="range" id="margem-lucro" min="0" max="500" value="100"> <span class="slider-value" id="margem-lucro-valor">100%</span> </div> </div> <div class="price-suggestion"> <p>Preço de Venda Sugerido</p> <h4 id="preco-sugerido">R$ 0,00</h4> </div> </div> <div class="form-group full-width" style="margin-top: 30px; display:flex; gap: 15px;"> <button type="button" class="btn btn-secondary" data-modal="modal-produto">Cancelar</button> <button type="submit" class="btn btn-primary">Salvar Produto</button> </div> </form>
+            <form id="form-produto"> <input type="hidden" id="produto-id"> <div class="upload-area" id="upload-area"> <svg class="icon" style="width:40px; height:40px; color: var(--cor-texto-secundario); margin-bottom:10px;"><use href="#icon-upload"/></svg> <p>Clique para enviar uma foto</p> <input type="file" id="foto-produto" accept="image/*" style="display:none;"> <img id="preview-foto" src="" alt="Preview da foto" style="max-width: 100px; max-height: 100px; display: none; margin-top: 10px; border-radius: 8px;"> </div> <div class="form-group full-width"> <label for="nome-produto">Nome do Produto</label> <input type="text" id="nome-produto" required placeholder="Ex: Bolsa de Couro Luxo"> </div> <div class="form-grid"> <div class="form-group"> <label for="custo-produto">Custo do Produto (R$)</label> <input type="number" step="0.01" id="custo-produto" required placeholder="55.00"> </div> <div class="form-group"> <label for="categoria-produto">Categoria</label> <select id="categoria-produto" required> <option value="bolsa">Bolsa</option> <option value="calcado">Calçado</option> <option value="roupa">Roupa</option> <option value="perfumaria">Perfumaria</option> <option value="maquiagem">Maquiagem</option> <option value="skincare">Skincare</option> <option value="acessorio">Acessório</option> </select> </div> </div> <div class="form-section"> <label>Estoque e Variações</label> <div class="variation-type-selector"> <input type="radio" name="variation-type" id="type-none" value="none" checked> <label for="type-none">Produto Único</label> <input type="radio" name="variation-type" id="type-simple" value="simple"> <label for="type-simple">Variação Simples</label> <input type="radio" name="variation-type" id="type-combined" value="combined"> <label for="type-combined">Variação Combinada</label> </div> <div id="container-no-variation" class="variation-container active"> <div class="form-group full-width"> <label for="estoque-produto">Quantidade em Estoque</label> <input type="number" id="estoque-produto" placeholder="50"> </div> </div> <div id="container-simple-variation" class="variation-container"> <div class="form-group full-width"> <label for="simple-variation-name">Nome da Variação (Ex: Tamanho)</label> <input type="text" id="simple-variation-name" placeholder="Tamanho"> </div> <div id="simple-variation-header" class="variation-header" style="display: none;"> <span>Valor da Variação</span> <span>Estoque</span> <span></span> </div> <div id="simple-variation-list"></div> <button type="button" id="add-simple-variation-btn" class="btn btn-secondary btn-sm" style="width: auto; margin-top: 10px;">Adicionar Variação</button> </div> <div id="container-combined-variation" class="variation-container"> <div class="form-grid"> <div class="form-group"> <label for="combined-variation-name1">Atributo 1 (Ex: Cor)</label> <input type="text" id="combined-variation-name1" placeholder="Cor"> </div> <div class="form-group"> <label for="combined-variation-values1">Valores (separados por vírgula)</label> <input type="text" id="combined-variation-values1" placeholder="Preto, Nude, Branco"> </div> </div> <div class="form-grid"> <div class="form-group"> <label for="combined-variation-name2">Atributo 2 (Ex: Tamanho)</label> <input type="text" id="combined-variation-name2" placeholder="Tamanho"> </div> <div class="form-group"> <label for="combined-variation-values2">Valores (separados por vírgula)</label> <input type="text" id="combined-variation-values2" placeholder="34, 35, 36"> </div> </div> <button type="button" id="generate-combinations-btn" class="btn btn-secondary" style="margin-bottom: 20px;">Gerar Combinações</button> <div id="combined-variation-header" class="variation-header combined" style="display: none;"> <span id="header-attr1">Atributo 1</span> <span id="header-attr2">Atributo 2</span> <span>Estoque</span> <span></span> </div> <div id="combined-variation-list"></div> </div> </div> 
+            <div class="form-section"> 
+                <h3 class="card-title" style="margin-bottom: 20px; font-size:1.2rem;">Precificação Inteligente</h3>
+                <div class="form-grid"> 
+                    <div class="form-group"> <label for="custo-unitario-despesa" style="font-size:0.8rem; color: var(--cor-texto-secundario)">+ Custo Fixo/Variável (por unidade)</label> <input type="text" id="custo-unitario-despesa" readonly> </div> 
+                    <div class="form-group"> <label for="custo-total-produto" style="font-size:0.8rem; color: var(--cor-texto-secundario)">= Custo Total do Produto</label> <input type="text" id="custo-total-produto" readonly> </div> 
+                </div> 
+
+                <!-- NOVA SEÇÃO DE DESPESAS PERCENTUAIS -->
+                <div class="form-group full-width" style="margin-top: 15px;">
+                    <label>Outras Despesas (em %)</label>
+                    <div class="percent-expense-add">
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label for="nome-despesa-percentual" style="font-size:0.8rem; font-weight: 400;">Nome da Despesa</label>
+                            <input type="text" id="nome-despesa-percentual" placeholder="Ex: Taxa Marketplace">
+                        </div>
+                         <div class="form-group" style="margin-bottom:0;">
+                            <label for="valor-despesa-percentual" style="font-size:0.8rem; font-weight: 400;">Valor (%)</label>
+                            <input type="number" step="0.01" id="valor-despesa-percentual" placeholder="15">
+                        </div>
+                        <button type="button" id="btn-add-despesa-percentual" class="btn btn-secondary">Adicionar</button>
+                    </div>
+                    <ul class="percent-expense-list" id="percent-expense-list"></ul>
+                </div>
+                <!-- FIM DA NOVA SEÇÃO -->
+
+                <div class="form-group full-width slider-group"> <label for="margem-lucro">Margem de Lucro Desejada</label> <div class="slider-container"> <input type="range" id="margem-lucro" min="0" max="500" value="100"> <span class="slider-value" id="margem-lucro-valor">100%</span> </div> </div> <div class="price-suggestion"> <p>Preço de Venda Sugerido</p> <h4 id="preco-sugerido">R$ 0,00</h4> </div> </div> <div class="form-group full-width" style="margin-top: 30px; display:flex; gap: 15px;"> <button type="button" class="btn btn-secondary" data-modal="modal-produto">Cancelar</button> <button type="submit" class="btn btn-primary">Salvar Produto</button> </div> </form>
         </div>
     </div>
 
-    <!-- MODAL DE NOVA VENDA (INTACTO) -->
+    <!-- MODAL DE NOVA VENDA -->
     <div class="modal" id="modal-venda">
         <div class="modal-content">
             <div class="modal-header">
@@ -966,7 +1134,7 @@
         </div>
     </div>
     
-    <!-- MODAL DE SELEÇÃO DE PRODUTO PARA VENDA (INTACTO) -->
+    <!-- MODAL DE SELEÇÃO DE PRODUTO PARA VENDA -->
     <div class="modal" id="modal-selecionar-produto">
         <div class="modal-content modal-sm">
             <div class="modal-header">
@@ -979,7 +1147,7 @@
         </div>
     </div>
 
-    <!-- MODAL DE NOVA SAÍDA DE CAIXA (INTACTO) -->
+    <!-- MODAL DE NOVA SAÍDA DE CAIXA -->
      <div class="modal" id="modal-saida-caixa">
         <div class="modal-content modal-sm">
             <div class="modal-header">
@@ -1009,7 +1177,7 @@
         </div>
     </div>
     
-    <!-- MODAL DE NOVA DÍVIDA (ATUALIZADO) -->
+    <!-- MODAL DE NOVA DÍVIDA -->
     <div class="modal" id="modal-divida">
         <div class="modal-content modal-sm">
             <div class="modal-header">
@@ -1067,6 +1235,62 @@
         </div>
     </div>
     
+    <!-- NOVO MODAL: CADASTRO DE RECEITA -->
+    <div class="modal" id="modal-receita">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-receita-titulo">Criar Nova Receita de Produto</h3>
+                <button class="close-modal" data-modal="modal-receita">&times;</button>
+            </div>
+            <form id="form-receita">
+                <input type="hidden" id="receita-id">
+                <div class="upload-area" id="upload-area-receita">
+                    <svg class="icon" style="width:40px; height:40px; color: var(--cor-texto-secundario); margin-bottom:10px;"><use href="#icon-upload"/></svg>
+                    <p>Clique para enviar uma foto</p>
+                    <input type="file" id="foto-receita" accept="image/*" style="display:none;">
+                    <img id="preview-foto-receita" src="" alt="Preview da foto da receita" style="max-width: 100px; max-height: 100px; display: none; margin-top: 10px; border-radius: 8px;">
+                </div>
+                <div class="form-group full-width">
+                    <label for="receita-nome">Nome do Produto (Receita)</label>
+                    <input type="text" id="receita-nome" required placeholder="Ex: Bolsa de Couro com Alça Dourada">
+                </div>
+
+                <div class="form-section">
+                    <h3 class="card-title" style="margin-bottom: 20px; font-size:1.2rem;">Composição da Receita</h3>
+                    <div class="add-insumo-form">
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label for="receita-selecionar-insumo">Selecione o Insumo</label>
+                            <select id="receita-selecionar-insumo"></select>
+                        </div>
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label for="receita-quantidade-insumo">Quantidade Usada</label>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                               <input type="number" step="0.01" id="receita-quantidade-insumo" placeholder="2.5">
+                               <span id="unidade-medida-selecionada"></span>
+                            </div>
+                        </div>
+                        <button type="button" id="btn-adicionar-insumo-receita" class="btn btn-secondary">Adicionar</button>
+                    </div>
+
+                    <ul id="receita-lista-insumos" class="costs-list" style="max-height: 150px;">
+                       <!-- Insumos adicionados à receita aparecerão aqui -->
+                       <p style="text-align: center; color: var(--cor-texto-secundario); padding: 10px 0;">Nenhum insumo adicionado.</p>
+                    </ul>
+                </div>
+
+                <div class="total-card" style="margin-top: 20px;">
+                    <h4>Custo Total de Produção</h4>
+                    <p id="receita-custo-total">R$ 0,00</p>
+                </div>
+
+                <div class="form-group full-width" style="margin-top: 30px; display:flex; gap: 15px;">
+                    <button type="button" class="btn btn-secondary" data-modal="modal-receita">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar Receita</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div id="app-notification" class="app-notification">
         <p id="notification-text"></p>
         <button id="notification-close" class="close-modal" style="color: var(--cor-texto)">&times;</button>
@@ -1093,10 +1317,14 @@
             let vendas = [];
             let fluxoCaixa = [];
             let dividas = [];
+            let insumos = []; 
+            let receitas = []; // NOVO ESTADO PARA RECEITAS
             let planoQuitacaoAtivo = {}; 
             let metaDiariaConcluida = { data: null };
             let custoUnitarioGlobal = 0.0;
             let currentSaleItems = []; 
+            let currentPercentageExpenses = [];
+            let currentRecipeInsumos = []; // NOVO ESTADO PARA INSUMOS DA RECEITA ATUAL
 
             // --- FUNÇÕES DE UTILIDADE ---
             const formatCurrency = (value) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
@@ -1108,7 +1336,7 @@
             function openModal(modalId) { const modal = document.getElementById(modalId); if(modal) modal.classList.add('active'); }
             function closeModal(modalId) { const modal = document.getElementById(modalId); if(modal) modal.classList.remove('active'); }
             closeModalButtons.forEach(btn => btn.addEventListener('click', () => {
-                const modalId = btn.closest('.modal')?.id;
+                const modalId = btn.closest('.modal')?.id || btn.dataset.modal;
                 if(modalId) closeModal(modalId);
             }));
             
@@ -1162,7 +1390,7 @@
             });
             window.onpopstate = function(event) { if(event.state && event.state.page) { showPage(event.state.page, false); } else { showPage('dashboard', false); } };
             
-            // --- LÓGICA DA PÁGINA DE DESPESAS (INTACTA) ---
+            // --- LÓGICA DA PÁGINA DE DESPESAS ---
             const formCustoFixo = document.getElementById('form-custo-fixo');
             const listaCustosFixosEl = document.getElementById('lista-custos-fixos');
             const totalCustosFixosEl = document.getElementById('total-custos-fixos');
@@ -1170,17 +1398,277 @@
             const listaCustosVariaveisEl = document.getElementById('lista-custos-variaveis');
             const totalCustosVariaveisEl = document.getElementById('total-custos-variaveis');
             const custoUnitarioFinalEl = document.getElementById('custo-unitario-final');
-            function renderizarCustosFixos() { if(!listaCustosFixosEl) return; listaCustosFixosEl.innerHTML = ''; let total = 0; custosFixos.forEach((custo, index) => { total += custo.valor; const li = document.createElement('li'); li.className = 'cost-item'; li.innerHTML = `<div><span class="cost-name">${custo.nome}</span><span class="cost-details">Vence em: ${formatDate(custo.vencimento)}</span></div><div><span class="cost-value">${formatCurrency(custo.valor)}</span><button class="btn btn-sm btn-danger" data-type="fixo" data-index="${index}"><svg class="icon" style="width:16px; height:16px;"><use href="#icon-trash"/></svg></button></div>`; listaCustosFixosEl.appendChild(li); }); totalCustosFixosEl.textContent = formatCurrency(total); calcularCustoUnitario(); }
-            function renderizarCustosVariaveis() { if(!listaCustosVariaveisEl) return; listaCustosVariaveisEl.innerHTML = ''; let totalReais = 0; custosVariaveis.forEach((custo, index) => { if (custo.tipo === 'real') totalReais += custo.valor; const li = document.createElement('li'); li.className = 'cost-item'; const valorFormatado = custo.tipo === 'real' ? formatCurrency(custo.valor) : `${custo.valor}%`; li.innerHTML = `<span class="cost-name">${custo.nome}</span><div><span class="cost-value">${valorFormatado}</span><button class="btn btn-sm btn-danger" data-type="variavel" data-index="${index}"><svg class="icon" style="width:16px; height:16px;"><use href="#icon-trash"/></svg></button></div>`; listaCustosVariaveisEl.appendChild(li); }); totalCustosVariaveisEl.textContent = formatCurrency(totalReais); calcularCustoUnitario(); }
+            function renderizarCustosFixos() { if(!listaCustosFixosEl) return; listaCustosFixosEl.innerHTML = ''; let total = 0; custosFixos.forEach((custo, index) => { total += custo.valor; const li = document.createElement('li'); li.className = 'cost-item'; li.innerHTML = `<div><span class="cost-name">${custo.nome}</span><span class="cost-details">Vence em: ${formatDate(custo.vencimento)}</span></div><div><span class="cost-value">${formatCurrency(custo.valor)}</span><button class="btn btn-sm btn-danger" data-type="fixo" data-index="${index}"><svg class="icon" style="width:16px; height:16px;"><use href="#icon-trash"/></svg></button></div>`; listaCustosFixosEl.appendChild(li); }); if(totalCustosFixosEl) totalCustosFixosEl.textContent = formatCurrency(total); calcularCustoUnitario(); }
+            function renderizarCustosVariaveis() { if(!listaCustosVariaveisEl) return; listaCustosVariaveisEl.innerHTML = ''; let totalReais = 0; custosVariaveis.forEach((custo, index) => { if (custo.tipo === 'real') totalReais += custo.valor; const li = document.createElement('li'); li.className = 'cost-item'; const valorFormatado = formatCurrency(custo.valor); li.innerHTML = `<span class="cost-name">${custo.nome}</span><div><span class="cost-value">${valorFormatado}</span><button class="btn btn-sm btn-danger" data-type="variavel" data-index="${index}"><svg class="icon" style="width:16px; height:16px;"><use href="#icon-trash"/></svg></button></div>`; listaCustosVariaveisEl.appendChild(li); }); if(totalCustosVariaveisEl) totalCustosVariaveisEl.textContent = formatCurrency(totalReais); calcularCustoUnitario(); }
             function calcularCustoUnitario() { if(!custoUnitarioFinalEl) return; const totalFixo = custosFixos.reduce((acc, custo) => acc + custo.valor, 0); const totalVariavelReais = custosVariaveis.filter(c => c.tipo === 'real').reduce((acc, custo) => acc + custo.valor, 0); const totalFrete = parseFloat(document.getElementById('valor-frete')?.value) || 0; const metaVendas = parseInt(document.getElementById('meta-vendas')?.value) || 0; custoUnitarioGlobal = (metaVendas > 0) ? (totalFixo + totalVariavelReais + totalFrete) / metaVendas : 0; custoUnitarioFinalEl.textContent = formatCurrency(custoUnitarioGlobal); }
             formCustoFixo?.addEventListener('submit', function(e) { e.preventDefault(); const nome = this.elements['nome-custo-fixo'].value.trim(), valor = parseFloat(this.elements['valor-custo-fixo'].value), vencimento = this.elements['data-vencimento-fixo'].value; if(nome && !isNaN(valor) && valor > 0 && vencimento) { custosFixos.push({id: Date.now(), nome, valor, vencimento}); renderizarCustosFixos(); this.reset(); this.elements['nome-custo-fixo'].focus(); } });
-            formCustoVariavel?.addEventListener('submit', function(e) { e.preventDefault(); const nome = this.elements['nome-custo-variavel'].value.trim(), valor = parseFloat(this.elements['valor-custo-variavel'].value), tipo = this.elements['tipo-custo-variavel'].value; if (nome && !isNaN(valor) && valor > 0) { custosVariaveis.push({nome, valor, tipo}); renderizarCustosVariaveis(); this.reset(); this.elements['nome-custo-variavel'].focus(); } });
+            formCustoVariavel?.addEventListener('submit', function(e) { e.preventDefault(); const nome = this.elements['nome-custo-variavel'].value.trim(), valor = parseFloat(this.elements['valor-custo-variavel'].value); if (nome && !isNaN(valor) && valor > 0) { custosVariaveis.push({nome, valor, tipo: 'real'}); renderizarCustosVariaveis(); this.reset(); this.elements['nome-custo-variavel'].focus(); } });
             document.querySelectorAll('#despesas .calculator-input').forEach(input => input?.addEventListener('input', calcularCustoUnitario));
 
-            // --- LÓGICA DA PÁGINA DE PRODUTOS (INTACTA) ---
-            const btnNovoProduto = document.getElementById('btn-novo-produto'); const formProduto = document.getElementById('form-produto'); const listaProdutosEl = document.getElementById('lista-produtos'); const custoProdutoInput = document.getElementById('custo-produto'); const margemLucroSlider = document.getElementById('margem-lucro'); const variationTypeRadios = document.querySelectorAll('input[name="variation-type"]');
-            function openProductModal(produto = null) { formProduto.reset(); document.getElementById('preview-foto').style.display = 'none'; document.getElementById('preview-foto').src = ''; document.getElementById('simple-variation-list').innerHTML = ''; document.getElementById('combined-variation-list').innerHTML = ''; if (produto) { document.getElementById('modal-produto-titulo').textContent = 'Editar Produto'; document.getElementById('produto-id').value = produto.id; document.getElementById('nome-produto').value = produto.nome; document.getElementById('custo-produto').value = produto.custo; document.getElementById('categoria-produto').value = produto.categoria; document.getElementById('margem-lucro').value = produto.margemLucro; if(produto.foto) { document.getElementById('preview-foto').src = produto.foto; document.getElementById('preview-foto').style.display = 'block'; } const variationType = produto.variationType || 'none'; document.querySelector(`input[name="variation-type"][value=${variationType}]`).checked = true; handleVariationTypeChange(); if(variationType === 'none'){ document.getElementById('estoque-produto').value = produto.estoque; } else if (variationType === 'simple'){ document.getElementById('simple-variation-name').value = produto.variationName; produto.variations.forEach(v => addSimpleVariationRow(v.name, v.stock)); } else if (variationType === 'combined'){ document.getElementById('combined-variation-name1').value = produto.attribute1.name; document.getElementById('combined-variation-values1').value = produto.attribute1.values.join(', '); document.getElementById('combined-variation-name2').value = produto.attribute2.name; document.getElementById('combined-variation-values2').value = produto.attribute2.values.join(', '); generateCombinations(produto.variations); } } else { document.getElementById('modal-produto-titulo').textContent = 'Novo Produto'; document.getElementById('produto-id').value = ''; document.querySelector('input[name="variation-type"][value=none]').checked = true; handleVariationTypeChange(); } updatePricing(); openModal('modal-produto'); }
-            function updatePricing() { const custoProduto = parseFloat(custoProdutoInput.value) || 0; const margemLucro = parseInt(margemLucroSlider.value) || 0; const custoTotal = custoProduto + custoUnitarioGlobal; const precoSugerido = custoTotal / (1 - (margemLucro / 100)); document.getElementById('custo-unitario-despesa').value = formatCurrency(custoUnitarioGlobal); document.getElementById('custo-total-produto').value = formatCurrency(custoTotal); document.getElementById('margem-lucro-valor').textContent = `${margemLucro}%`; document.getElementById('preco-sugerido').textContent = formatCurrency(precoSugerido); }
+             // --- LÓGICA DA PÁGINA DE PRODUÇÃO (INSUMOS E RECEITAS) ---
+            const formInsumo = document.getElementById('form-insumo');
+            const listaInsumosEl = document.getElementById('lista-insumos');
+            const btnCriarReceita = document.getElementById('btn-criar-receita');
+            const formReceita = document.getElementById('form-receita');
+            const listaReceitasEl = document.getElementById('lista-receitas');
+
+            function renderizarInsumos() {
+                if(!listaInsumosEl) return;
+                listaInsumosEl.innerHTML = '';
+                if(insumos.length === 0) {
+                    listaInsumosEl.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 20px;">Nenhum insumo cadastrado.</td></tr>`;
+                    return;
+                }
+                insumos.forEach(insumo => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${insumo.nome}</td>
+                        <td>${formatCurrency(insumo.custo)} / ${insumo.unidade}</td>
+                        <td>${insumo.estoque} ${insumo.unidade}</td>
+                        <td>
+                            <div class="actions">
+                                <button class="btn btn-sm btn-secondary edit-insumo-btn" data-id="${insumo.id}"><svg class="icon" style="width:16px; height:16px;"><use href="#icon-edit"/></svg></button>
+                                <button class="btn btn-sm btn-danger delete-insumo-btn" data-id="${insumo.id}"><svg class="icon" style="width:16px; height:16px;"><use href="#icon-trash"/></svg></button>
+                            </div>
+                        </td>
+                    `;
+                    listaInsumosEl.appendChild(tr);
+                });
+            }
+
+            formInsumo?.addEventListener('submit', function(e){
+                e.preventDefault();
+                const nome = document.getElementById('nome-insumo').value.trim();
+                const unidade = document.getElementById('unidade-medida-insumo').value;
+                const custo = parseFloat(document.getElementById('custo-insumo').value);
+                const estoque = parseInt(document.getElementById('estoque-insumo').value);
+                if(nome && unidade && !isNaN(custo) && !isNaN(estoque)) {
+                    insumos.push({ id: Date.now(), nome, unidade, custo, estoque });
+                    renderizarInsumos();
+                    formInsumo.reset();
+                } else {
+                    alert('Por favor, preencha todos os campos corretamente.');
+                }
+            });
+            
+            // Lógica para Receitas
+            function renderizarReceitas() {
+                if (!listaReceitasEl) return;
+                listaReceitasEl.innerHTML = '';
+                if (receitas.length === 0) {
+                    listaReceitasEl.innerHTML = `<p style="text-align: center; color: var(--cor-texto-secundario); padding: 20px 0;">Nenhuma receita criada ainda.</p>`;
+                    return;
+                }
+                receitas.forEach(receita => {
+                    const li = document.createElement('li');
+                    li.className = 'recipe-item';
+                    li.innerHTML = `
+                        <img src="${receita.foto || 'https://placehold.co/100x100/fce7f3/831843?text=C4'}" alt="Foto de ${receita.nome}" class="recipe-item-img">
+                        <div class="recipe-item-info">
+                            <div class="recipe-item-name">${receita.nome}</div>
+                            <div class="recipe-item-cost">Custo de produção: <strong>${formatCurrency(receita.custoTotal)}</strong></div>
+                        </div>
+                        <div class="actions">
+                            <button class="btn btn-sm btn-danger delete-receita-btn" data-id="${receita.id}"><svg class="icon" style="width:16px; height:16px;"><use href="#icon-trash"/></svg></button>
+                        </div>
+                    `;
+                    listaReceitasEl.appendChild(li);
+                });
+            }
+
+            function openReceitaModal() {
+                formReceita.reset();
+                currentRecipeInsumos = [];
+                document.getElementById('preview-foto-receita').style.display = 'none';
+                document.getElementById('preview-foto-receita').src = '';
+                
+                const selectInsumo = document.getElementById('receita-selecionar-insumo');
+                selectInsumo.innerHTML = '<option value="">-- Selecione --</option>';
+                insumos.forEach(insumo => {
+                    const option = new Option(`${insumo.nome} (${formatCurrency(insumo.custo)}/${insumo.unidade})`, insumo.id);
+                    selectInsumo.add(option);
+                });
+                
+                renderCurrentRecipeInsumos();
+                updateRecipeUnitOfMeasure();
+                openModal('modal-receita');
+            }
+
+            function updateRecipeUnitOfMeasure() {
+                const selectInsumo = document.getElementById('receita-selecionar-insumo');
+                const unidadeEl = document.getElementById('unidade-medida-selecionada');
+                const selectedInsumo = insumos.find(i => i.id == selectInsumo.value);
+                unidadeEl.textContent = selectedInsumo ? selectedInsumo.unidade : '';
+            }
+
+            function renderCurrentRecipeInsumos() {
+                const listaEl = document.getElementById('receita-lista-insumos');
+                const custoTotalEl = document.getElementById('receita-custo-total');
+                let custoTotal = 0;
+
+                if (currentRecipeInsumos.length === 0) {
+                    listaEl.innerHTML = `<p style="text-align: center; color: var(--cor-texto-secundario); padding: 10px 0;">Nenhum insumo adicionado.</p>`;
+                } else {
+                    listaEl.innerHTML = '';
+                    currentRecipeInsumos.forEach((item, index) => {
+                        custoTotal += item.custoCalculado;
+                        const li = document.createElement('li');
+                        li.className = 'cost-item';
+                        li.innerHTML = `
+                            <div>
+                                <span class="cost-name">${item.nome}</span>
+                                <span class="cost-details">${item.quantidade} ${item.unidade}</span>
+                            </div>
+                            <div>
+                                <span class="cost-value">${formatCurrency(item.custoCalculado)}</span>
+                                <button type="button" class="btn btn-sm btn-danger remove-recipe-insumo-btn" data-index="${index}">&times;</button>
+                            </div>
+                        `;
+                        listaEl.appendChild(li);
+                    });
+                }
+                custoTotalEl.textContent = formatCurrency(custoTotal);
+            }
+            
+            btnCriarReceita?.addEventListener('click', openReceitaModal);
+            document.getElementById('receita-selecionar-insumo')?.addEventListener('change', updateRecipeUnitOfMeasure);
+            
+            document.getElementById('upload-area-receita')?.addEventListener('click', () => document.getElementById('foto-receita').click());
+            document.getElementById('foto-receita')?.addEventListener('change', function(e) {
+                if(e.target.files && e.target.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const preview = document.getElementById('preview-foto-receita');
+                        preview.src = event.target.result;
+                        preview.style.display = 'block';
+                    };
+                    reader.readAsDataURL(e.target.files[0]);
+                }
+            });
+            
+            document.getElementById('btn-adicionar-insumo-receita')?.addEventListener('click', () => {
+                const insumoId = document.getElementById('receita-selecionar-insumo').value;
+                const quantidade = parseFloat(document.getElementById('receita-quantidade-insumo').value);
+                
+                if (!insumoId || isNaN(quantidade) || quantidade <= 0) {
+                    alert('Selecione um insumo e insira uma quantidade válida.');
+                    return;
+                }
+                const insumo = insumos.find(i => i.id == insumoId);
+                if (!insumo) return;
+
+                currentRecipeInsumos.push({
+                    id: insumo.id,
+                    nome: insumo.nome,
+                    quantidade: quantidade,
+                    unidade: insumo.unidade,
+                    custoCalculado: insumo.custo * quantidade
+                });
+
+                renderCurrentRecipeInsumos();
+                document.getElementById('receita-quantidade-insumo').value = '';
+                document.getElementById('receita-selecionar-insumo').value = '';
+                updateRecipeUnitOfMeasure();
+            });
+
+            document.getElementById('receita-lista-insumos')?.addEventListener('click', e => {
+                if (e.target.closest('.remove-recipe-insumo-btn')) {
+                    const index = parseInt(e.target.closest('.remove-recipe-insumo-btn').dataset.index);
+                    currentRecipeInsumos.splice(index, 1);
+                    renderCurrentRecipeInsumos();
+                }
+            });
+
+            formReceita?.addEventListener('submit', function(e){
+                e.preventDefault();
+                const nome = document.getElementById('receita-nome').value.trim();
+                if(!nome || currentRecipeInsumos.length === 0){
+                    alert('Preencha o nome da receita e adicione pelo menos um insumo.');
+                    return;
+                }
+                const novaReceita = {
+                    id: Date.now(),
+                    nome: nome,
+                    foto: document.getElementById('preview-foto-receita').src,
+                    insumos: [...currentRecipeInsumos],
+                    custoTotal: parseCurrency(document.getElementById('receita-custo-total').textContent)
+                };
+                receitas.push(novaReceita);
+                renderizarReceitas();
+                closeModal('modal-receita');
+            });
+
+
+            // --- LÓGICA DA PÁGINA DE PRODUTOS ---
+            const btnNovoProduto = document.getElementById('btn-novo-produto'); const formProduto = document.getElementById('form-produto'); const listaProdutosEl = document.getElementById('lista-produtos'); const custoProdutoInput = document.getElementById('custo-produto'); const margemLucroSlider = document.getElementById('margem-lucro'); const variationTypeRadios = document.querySelectorAll('input[name="variation-type"]'); const btnAddDespesaPercentual = document.getElementById('btn-add-despesa-percentual'); const percentExpenseListEl = document.getElementById('percent-expense-list');
+
+            function openProductModal(produto = null) { 
+                formProduto.reset();
+                currentPercentageExpenses = [];
+                document.getElementById('preview-foto').style.display = 'none'; document.getElementById('preview-foto').src = ''; 
+                document.getElementById('simple-variation-list').innerHTML = ''; document.getElementById('combined-variation-list').innerHTML = ''; 
+                if (produto) { 
+                    document.getElementById('modal-produto-titulo').textContent = 'Editar Produto'; 
+                    document.getElementById('produto-id').value = produto.id; 
+                    document.getElementById('nome-produto').value = produto.nome; 
+                    document.getElementById('custo-produto').value = produto.custo; 
+                    document.getElementById('categoria-produto').value = produto.categoria; 
+                    document.getElementById('margem-lucro').value = produto.margemLucro; 
+                    if(produto.foto) { document.getElementById('preview-foto').src = produto.foto; document.getElementById('preview-foto').style.display = 'block'; } 
+                    
+                    if (produto.despesasPercentuais) { currentPercentageExpenses = [...produto.despesasPercentuais]; }
+                    
+                    const variationType = produto.variationType || 'none'; 
+                    document.querySelector(`input[name="variation-type"][value=${variationType}]`).checked = true; handleVariationTypeChange(); 
+                    if(variationType === 'none'){ document.getElementById('estoque-produto').value = produto.estoque; } 
+                    else if (variationType === 'simple'){ document.getElementById('simple-variation-name').value = produto.variationName; produto.variations.forEach(v => addSimpleVariationRow(v.name, v.stock)); } 
+                    else if (variationType === 'combined'){ document.getElementById('combined-variation-name1').value = produto.attribute1.name; document.getElementById('combined-variation-values1').value = produto.attribute1.values.join(', '); document.getElementById('combined-variation-name2').value = produto.attribute2.name; document.getElementById('combined-variation-values2').value = produto.attribute2.values.join(', '); generateCombinations(produto.variations); } 
+                } else { 
+                    document.getElementById('modal-produto-titulo').textContent = 'Novo Produto'; 
+                    document.getElementById('produto-id').value = ''; 
+                    document.querySelector('input[name="variation-type"][value=none]').checked = true; handleVariationTypeChange(); 
+                } 
+                renderizarDespesasPercentuais();
+                updatePricing(); 
+                openModal('modal-produto'); 
+            }
+
+            function updatePricing() { 
+                const custoProduto = parseFloat(custoProdutoInput.value) || 0; 
+                const margemLucro = parseInt(margemLucroSlider.value) || 0; 
+                const custoTotalFixo = custoProduto + custoUnitarioGlobal;
+                
+                const totalDespesasPercentuais = currentPercentageExpenses.reduce((acc, despesa) => acc + despesa.valor, 0);
+                
+                let denominador = 1 - (margemLucro / 100) - (totalDespesasPercentuais / 100);
+                if (denominador <= 0) denominador = 0.01; // Evita divisão por zero ou negativo
+                
+                const precoSugerido = custoTotalFixo / denominador; 
+                
+                document.getElementById('custo-unitario-despesa').value = formatCurrency(custoUnitarioGlobal); 
+                document.getElementById('custo-total-produto').value = formatCurrency(custoTotalFixo); 
+                document.getElementById('margem-lucro-valor').textContent = `${margemLucro}%`; 
+                document.getElementById('preco-sugerido').textContent = formatCurrency(precoSugerido); 
+            }
+
+            function renderizarDespesasPercentuais() {
+                if (!percentExpenseListEl) return;
+                percentExpenseListEl.innerHTML = '';
+                currentPercentageExpenses.forEach((despesa, index) => {
+                    const li = document.createElement('li');
+                    li.className = 'percent-expense-item';
+                    li.innerHTML = `
+                        <span>${despesa.nome}</span>
+                        <div>
+                            <span>${despesa.valor}%</span>
+                            <button type="button" class="btn btn-sm btn-danger remove-percent-expense-btn" data-index="${index}">&times;</button>
+                        </div>
+                    `;
+                    percentExpenseListEl.appendChild(li);
+                });
+                updatePricing();
+            }
+
             function renderizarProdutos() { if(!listaProdutosEl) return; listaProdutosEl.innerHTML = ''; if(produtos.length === 0) { listaProdutosEl.innerHTML = `<tr><td colspan="4" style="text-align:center; padding: 20px;">Nenhum produto cadastrado.</td></tr>`; return; } produtos.forEach(produto => { const tr = document.createElement('tr'); const totalEstoque = produto.variationType === 'none' ? produto.estoque : produto.variations.reduce((acc, v) => acc + (v.stock || 0), 0); tr.innerHTML = `<td><div class="product-info"><img src="${produto.foto || 'https://placehold.co/100x100/fbcfe8/831843?text=C4'}" alt="Foto de ${produto.nome}" class="product-img"><div><div class="product-name">${produto.nome}</div><div class="product-category">${produto.categoria.charAt(0).toUpperCase() + produto.categoria.slice(1)}</div></div></div></td><td>${formatCurrency(produto.precoSugerido)}</td><td>${totalEstoque} un.${produto.variationType !== 'none' ? `<span class="stock-detail">${produto.variations.length} variações</span>` : ''}</td><td><div class="actions"><button class="btn btn-sm btn-secondary edit-prod-btn" data-id="${produto.id}"><svg class="icon" style="width:16px; height:16px;"><use href="#icon-edit"/></svg></button><button class="btn btn-sm btn-danger delete-prod-btn" data-id="${produto.id}"><svg class="icon" style="width:16px; height:16px;"><use href="#icon-trash"/></svg></button></div></td>`; listaProdutosEl.appendChild(tr); }); updateProductDashboard(); }
             function updateProductDashboard() { const totalAtivosEl = document.getElementById('prod-ativos-total'); const maisEstoqueEl = document.getElementById('prod-mais-estoque'); const maisEstoqueQtdEl = document.getElementById('prod-mais-estoque-qtd'); if (totalAtivosEl) totalAtivosEl.textContent = produtos.length; if (produtos.length > 0) { const sortedByStock = [...produtos].sort((a, b) => { const stockA = a.variationType === 'none' ? a.estoque : a.variations.reduce((acc, v) => acc + v.stock, 0); const stockB = b.variationType === 'none' ? b.estoque : b.variations.reduce((acc, v) => acc + v.stock, 0); return stockB - stockA; }); const produtoMaisEstoque = sortedByStock[0]; const totalEstoque = produtoMaisEstoque.variationType === 'none' ? produtoMaisEstoque.estoque : produtoMaisEstoque.variations.reduce((acc, v) => acc + v.stock, 0); if (maisEstoqueEl) maisEstoqueEl.textContent = produtoMaisEstoque.nome; if (maisEstoqueQtdEl) maisEstoqueQtdEl.textContent = `${totalEstoque} unidades`; } else { if (maisEstoqueEl) maisEstoqueEl.textContent = 'N/A'; if (maisEstoqueQtdEl) maisEstoqueQtdEl.textContent = '0 unidades'; } }
             function handleVariationTypeChange(){ const selectedType = document.querySelector('input[name="variation-type"]:checked').value; document.querySelectorAll('.variation-container').forEach(c => c.classList.remove('active')); document.getElementById(`container-${selectedType === 'none' ? 'no' : selectedType}-variation`).classList.add('active'); }
@@ -1189,11 +1677,34 @@
             document.getElementById('add-simple-variation-btn').addEventListener('click', () => addSimpleVariationRow());
             const combinedVariationList = document.getElementById('combined-variation-list'); function generateCombinations(existingVariations = null){ const name1 = document.getElementById('combined-variation-name1').value.trim() || 'Atributo 1'; const values1 = document.getElementById('combined-variation-values1').value.split(',').map(v => v.trim()).filter(Boolean); const name2 = document.getElementById('combined-variation-name2').value.trim() || 'Atributo 2'; const values2 = document.getElementById('combined-variation-values2').value.split(',').map(v => v.trim()).filter(Boolean); if(!existingVariations && (values1.length === 0 || values2.length === 0)) return; const header = document.getElementById('combined-variation-header'); header.style.display = 'grid'; document.getElementById('header-attr1').textContent = name1; document.getElementById('header-attr2').textContent = name2; combinedVariationList.innerHTML = ''; if (existingVariations) { existingVariations.forEach(v => { addCombinedRow(v.attr1, v.attr2, v.stock); }); } else { values1.forEach(v1 => { values2.forEach(v2 => { addCombinedRow(v1, v2, ''); }); }); } }
             function addCombinedRow(v1, v2, stock) { const div = document.createElement('div'); div.className = 'variation-row combined'; div.innerHTML = `<input type="text" class="combined-variation-row-v1" value="${v1}" readonly><input type="text" class="combined-variation-row-v2" value="${v2}" readonly><input type="number" placeholder="0" class="combined-variation-row-stock" value="${stock}" required><button type="button" class="btn btn-sm btn-danger remove-variation-row">&times;</button>`; combinedVariationList.appendChild(div); }
-            document.getElementById('generate-combinations-btn').addEventListener('click', () => generateCombinations()); btnNovoProduto?.addEventListener('click', () => openProductModal()); custoProdutoInput?.addEventListener('input', updatePricing); margemLucroSlider?.addEventListener('input', updatePricing);
+            document.getElementById('generate-combinations-btn').addEventListener('click', () => generateCombinations()); btnNovoProduto?.addEventListener('click', () => openProductModal()); 
+            [custoProdutoInput, margemLucroSlider].forEach(el => el?.addEventListener('input', updatePricing));
+            
+            btnAddDespesaPercentual?.addEventListener('click', () => {
+                const nomeInput = document.getElementById('nome-despesa-percentual');
+                const valorInput = document.getElementById('valor-despesa-percentual');
+                const nome = nomeInput.value.trim();
+                const valor = parseFloat(valorInput.value);
+                if (nome && !isNaN(valor) && valor > 0) {
+                    currentPercentageExpenses.push({ nome, valor });
+                    renderizarDespesasPercentuais();
+                    nomeInput.value = '';
+                    valorInput.value = '';
+                    nomeInput.focus();
+                }
+            });
+            percentExpenseListEl?.addEventListener('click', (e) => {
+                if (e.target.closest('.remove-percent-expense-btn')) {
+                    const index = parseInt(e.target.closest('.remove-percent-expense-btn').dataset.index);
+                    currentPercentageExpenses.splice(index, 1);
+                    renderizarDespesasPercentuais();
+                }
+            });
+
             document.getElementById('upload-area')?.addEventListener('click', () => document.getElementById('foto-produto').click()); document.getElementById('foto-produto')?.addEventListener('change', function(e) { if(e.target.files && e.target.files[0]) { const reader = new FileReader(); reader.onload = function(event) { const preview = document.getElementById('preview-foto'); preview.src = event.target.result; preview.style.display = 'block'; }; reader.readAsDataURL(e.target.files[0]); } });
-            formProduto?.addEventListener('submit', function(e) { e.preventDefault(); const id = document.getElementById('produto-id').value; const produtoData = { nome: document.getElementById('nome-produto').value, custo: parseFloat(document.getElementById('custo-produto').value), categoria: document.getElementById('categoria-produto').value, margemLucro: parseInt(document.getElementById('margem-lucro').value), precoSugerido: parseCurrency(document.getElementById('preco-sugerido').textContent), foto: document.getElementById('preview-foto').src, variationType: document.querySelector('input[name="variation-type"]:checked').value, variations: [], estoque: 0 }; if (produtoData.variationType === 'none') { produtoData.estoque = parseInt(document.getElementById('estoque-produto').value) || 0; } else if (produtoData.variationType === 'simple') { produtoData.variationName = document.getElementById('simple-variation-name').value; document.querySelectorAll('#simple-variation-list .variation-row').forEach(row => { produtoData.variations.push({ name: row.querySelector('.simple-variation-row-name').value, stock: parseInt(row.querySelector('.simple-variation-row-stock').value) || 0 }); }); } else if (produtoData.variationType === 'combined') { produtoData.attribute1 = { name: document.getElementById('combined-variation-name1').value, values: document.getElementById('combined-variation-values1').value.split(',').map(v => v.trim()) }; produtoData.attribute2 = { name: document.getElementById('combined-variation-name2').value, values: document.getElementById('combined-variation-values2').value.split(',').map(v => v.trim()) }; document.querySelectorAll('#combined-variation-list .variation-row').forEach(row => { produtoData.variations.push({ attr1: row.querySelector('.combined-variation-row-v1').value, attr2: row.querySelector('.combined-variation-row-v2').value, stock: parseInt(row.querySelector('.combined-variation-row-stock').value) || 0 }); }); } if (id) { const index = produtos.findIndex(p => p.id == id); produtos[index] = { ...produtos[index], ...produtoData }; } else { produtoData.id = Date.now(); produtos.push(produtoData); } renderizarProdutos(); closeModal('modal-produto'); });
+            formProduto?.addEventListener('submit', function(e) { e.preventDefault(); const id = document.getElementById('produto-id').value; const produtoData = { nome: document.getElementById('nome-produto').value, custo: parseFloat(document.getElementById('custo-produto').value), categoria: document.getElementById('categoria-produto').value, margemLucro: parseInt(document.getElementById('margem-lucro').value), precoSugerido: parseCurrency(document.getElementById('preco-sugerido').textContent), foto: document.getElementById('preview-foto').src, variationType: document.querySelector('input[name="variation-type"]:checked').value, variations: [], estoque: 0, despesasPercentuais: [...currentPercentageExpenses] }; if (produtoData.variationType === 'none') { produtoData.estoque = parseInt(document.getElementById('estoque-produto').value) || 0; } else if (produtoData.variationType === 'simple') { produtoData.variationName = document.getElementById('simple-variation-name').value; document.querySelectorAll('#simple-variation-list .variation-row').forEach(row => { produtoData.variations.push({ name: row.querySelector('.simple-variation-row-name').value, stock: parseInt(row.querySelector('.simple-variation-row-stock').value) || 0 }); }); } else if (produtoData.variationType === 'combined') { produtoData.attribute1 = { name: document.getElementById('combined-variation-name1').value, values: document.getElementById('combined-variation-values1').value.split(',').map(v => v.trim()) }; produtoData.attribute2 = { name: document.getElementById('combined-variation-name2').value, values: document.getElementById('combined-variation-values2').value.split(',').map(v => v.trim()) }; document.querySelectorAll('#combined-variation-list .variation-row').forEach(row => { produtoData.variations.push({ attr1: row.querySelector('.combined-variation-row-v1').value, attr2: row.querySelector('.combined-variation-row-v2').value, stock: parseInt(row.querySelector('.combined-variation-row-stock').value) || 0 }); }); } if (id) { const index = produtos.findIndex(p => p.id == id); produtos[index] = { ...produtos[index], ...produtoData }; } else { produtoData.id = Date.now(); produtos.push(produtoData); } renderizarProdutos(); closeModal('modal-produto'); });
              
-            // --- LÓGICA DA PÁGINA DE VENDAS (INTACTA) ---
+            // --- LÓGICA DA PÁGINA DE VENDAS ---
             const btnNovaVenda = document.getElementById('btn-nova-venda');
             const formVenda = document.getElementById('form-venda');
             const btnAdicionarItemVenda = document.getElementById('btn-adicionar-item-venda');
@@ -1235,7 +1746,7 @@
             btnAdicionarItemVenda?.addEventListener('click', openProductSelectionModal);
             [saleDiscountValueInput, saleDiscountTypeInput].forEach(el => el?.addEventListener('input', updateSaleSummary));
 
-            // --- LÓGICA DO FLUXO DE CAIXA (INTACTA) ---
+            // --- LÓGICA DO FLUXO DE CAIXA ---
             const btnNovaSaida = document.getElementById('btn-nova-saida');
             const formSaidaCaixa = document.getElementById('form-saida-caixa');
             const listaTransacoesCaixaEl = document.getElementById('lista-transacoes-caixa');
@@ -1248,7 +1759,7 @@
             
             formVenda?.addEventListener('submit', function(e) { e.preventDefault(); if (currentSaleItems.length === 0) { alert('Adicione pelo menos um produto à venda.'); return; } const clienteNome = document.getElementById('venda-cliente-nome').value.trim(); if (!clienteNome) { alert('Informe o nome do cliente.'); return; } currentSaleItems.forEach(item => { const produto = produtos.find(p => p.id === item.produtoId); if (item.variation) { produto.variations[item.variation.index].stock -= item.quantidade; } else { produto.estoque -= item.quantidade; } }); const subtotal = currentSaleItems.reduce((acc, item) => acc + (item.quantidade * item.precoUnitario), 0); const discountValue = parseFloat(saleDiscountValueInput.value) || 0; const discountType = saleDiscountTypeInput.value; let totalDiscount = (discountType === 'real') ? discountValue : subtotal * (discountValue / 100); const totalFinal = subtotal - totalDiscount; const novaVenda = { id: Date.now(), clienteNome: clienteNome, clienteTelefone: document.getElementById('venda-cliente-telefone').value, items: [...currentSaleItems], subtotal: subtotal, desconto: totalDiscount, total: totalFinal, pagamento: document.getElementById('sale-payment').value, data: new Date().toISOString(), status: 'pago' }; vendas.push(novaVenda); fluxoCaixa.push({ id: novaVenda.id, origemId: `venda-${novaVenda.id}`, data: novaVenda.data, descricao: `Venda para ${novaVenda.clienteNome}`, valor: novaVenda.total, tipo: 'entrada' }); renderizarVendas(); renderizarProdutos(); renderizarFluxoDeCaixa(); closeModal('modal-venda'); });
             
-            // --- LÓGICA LIBERDADE FINANCEIRA (INTACTA) ---
+            // --- LÓGICA LIBERDADE FINANCEIRA ---
             const btnAdicionarDivida = document.getElementById('btn-adicionar-divida');
             const formDivida = document.getElementById('form-divida');
             const listaDividasEl = document.getElementById('lista-dividas');
@@ -1407,9 +1918,11 @@
                 const costDeleteBtn = e.target.closest('.costs-list button.btn-danger'); if (costDeleteBtn) { const type = costDeleteBtn.dataset.type; const index = parseInt(costDeleteBtn.dataset.index); if (type === 'fixo') { custosFixos.splice(index, 1); renderizarCustosFixos(); } else if (type === 'variavel') { custosVariaveis.splice(index, 1); renderizarCustosVariaveis(); } }
                 const editDividaBtn = e.target.closest('.edit-divida-btn'); if(editDividaBtn){ const divida = dividas.find(d => d.id == editDividaBtn.dataset.id); openDividaModal(divida); }
                 const deleteDividaBtn = e.target.closest('.delete-divida-btn'); if(deleteDividaBtn){ if(confirm('Tem certeza que deseja excluir esta dívida?')){ const dividaId = deleteDividaBtn.dataset.id; dividas = dividas.filter(d => d.id != dividaId); renderizarDividas(); } }
+                const deleteInsumoBtn = e.target.closest('.delete-insumo-btn'); if(deleteInsumoBtn){ if(confirm('Tem certeza que deseja excluir este insumo?')){ const insumoId = deleteInsumoBtn.dataset.id; insumos = insumos.filter(i => i.id != insumoId); renderizarInsumos(); } }
+                const deleteReceitaBtn = e.target.closest('.delete-receita-btn'); if(deleteReceitaBtn){ if(confirm('Tem certeza que deseja excluir esta receita?')){ const receitaId = deleteReceitaBtn.dataset.id; receitas = receitas.filter(r => r.id != receitaId); renderizarReceitas(); } }
             });
 
-            // --- LÓGICA DAS CALCULADORAS (ATUALIZADO) ---
+            // --- LÓGICA DAS CALCULADORAS ---
             function calcularLucroCerto(){
                 const custo = parseFloat(document.getElementById('calc-lc-custo')?.value) || 0;
                 const despesas = parseFloat(document.getElementById('calc-lc-despesas')?.value) || 0;
@@ -1571,7 +2084,7 @@
                 calcularDistribuicaoLucro();
             }
 
-            // --- LÓGICA DE RELATÓRIOS (NOVO) ---
+            // --- LÓGICA DE RELATÓRIOS ---
             const btnGerarRelatorio = document.getElementById('btn-gerar-relatorio');
             const relatorioDataInicioEl = document.getElementById('relatorio-data-inicio');
             const relatorioDataFimEl = document.getElementById('relatorio-data-fim');
@@ -1670,7 +2183,7 @@
             btnGerarRelatorio?.addEventListener('click', gerarRelatorios);
             document.querySelectorAll('#relatorios .btn-secondary').forEach(btn => btn.addEventListener('click', () => alert('Funcionalidade de exportação em desenvolvimento.')));
 
-            // --- FUNÇÃO DE RENDERIZAÇÃO DO DASHBOARD PRINCIPAL (NOVA) ---
+            // --- FUNÇÃO DE RENDERIZAÇÃO DO DASHBOARD PRINCIPAL ---
             function renderizarDashboardPrincipal() {
                 const faturamentoEl = document.getElementById('dashboard-faturamento');
                 if(!faturamentoEl) return; // Se não está na página do dashboard, não faz nada
@@ -1734,12 +2247,17 @@
                 planoQuitacaoAtivo = JSON.parse(localStorage.getItem('planoQuitacaoAtivo')) || {};
                 metaDiariaConcluida = JSON.parse(localStorage.getItem('metaDiariaConcluida')) || { data: null };
                 
+                insumos = [
+                    { id: 1, nome: 'Tecido de Algodão Cru', unidade: 'm', custo: 25.50, estoque: 50 },
+                    { id: 2, nome: 'Linha de Costura (Branca)', unidade: 'un', custo: 5.00, estoque: 100 },
+                    { id: 3, nome: 'Zíper de Metal (20cm)', unidade: 'un', custo: 2.80, estoque: 200 }
+                ];
                 custosFixos = [ { id: 1, nome: 'Aluguel do Ateliê', valor: 850, vencimento: `${ano}-${mes}-10` }, { id: 2, nome: 'Plano de Internet', valor: 99.90, vencimento: `${ano}-${mes}-15` }, { id: 3, nome: 'Pró-labore', valor: 1500, vencimento: `${ano}-${mes}-05` }];
-                custosVariaveis = [ { nome: 'Comissão Vendedora', valor: 10, tipo: 'percent' }, { nome: 'Taxa Maquininha Crédito', valor: 4.99, tipo: 'percent' }, { nome: 'Embalagens (por venda)', valor: 2.50, tipo: 'real' }];
+                custosVariaveis = [ { nome: 'Taxa Maquininha Crédito', valor: 4.99, tipo: 'real' }, { nome: 'Embalagens (por venda)', valor: 2.50, tipo: 'real' }];
                 produtos = [
-                    { id: 1, nome: 'Bolsa Couro Luxo', custo: 80, categoria: 'bolsa', margemLucro: 120, precoSugerido: 176, foto: 'https://placehold.co/100x100/db1472/ffffff?text=Bolsa', variationType: 'none', estoque: 25, variations: [] },
-                    { id: 2, nome: 'Rasteirinha Átria', custo: 35, categoria: 'calcado', margemLucro: 100, precoSugerido: 70, foto: 'https://placehold.co/100x100/f8b81f/ffffff?text=Rasteirinha', variationType: 'combined', attribute1: {name: 'Cor', values:['Preto', 'Nude']}, attribute2: {name: 'Tamanho', values:['35','36']}, variations: [{attr1: 'Preto', attr2: '35', stock: 10},{attr1: 'Preto', attr2: '36', stock: 10},{attr1: 'Nude', attr2: '35', stock: 5},{attr1: 'Nude', attr2: '36', stock: 8}]},
-                    { id: 3, nome: 'Perfume Floral', custo: 60, categoria: 'perfumaria', margemLucro: 150, precoSugerido: 150, foto: 'https://placehold.co/100x100/10b981/ffffff?text=Perfume', variationType: 'simple', variationName: 'Volume', variations: [{name: '50ml', stock: 20}, {name: '100ml', stock: 15}] },
+                    { id: 1, nome: 'Bolsa Couro Luxo', custo: 80, categoria: 'bolsa', margemLucro: 120, precoSugerido: 176, foto: 'https://placehold.co/100x100/db1472/ffffff?text=Bolsa', variationType: 'none', estoque: 25, variations: [], despesasPercentuais: [{nome: 'Marketplace', valor: 15}] },
+                    { id: 2, nome: 'Rasteirinha Átria', custo: 35, categoria: 'calcado', margemLucro: 100, precoSugerido: 70, foto: 'https://placehold.co/100x100/f8b81f/ffffff?text=Rasteirinha', variationType: 'combined', attribute1: {name: 'Cor', values:['Preto', 'Nude']}, attribute2: {name: 'Tamanho', values:['35','36']}, variations: [{attr1: 'Preto', attr2: '35', stock: 10},{attr1: 'Preto', attr2: '36', stock: 10},{attr1: 'Nude', attr2: '35', stock: 5},{attr1: 'Nude', attr2: '36', stock: 8}], despesasPercentuais: []},
+                    { id: 3, nome: 'Perfume Floral', custo: 60, categoria: 'perfumaria', margemLucro: 150, precoSugerido: 150, foto: 'https://placehold.co/100x100/10b981/ffffff?text=Perfume', variationType: 'simple', variationName: 'Volume', variations: [{name: '50ml', stock: 20}, {name: '100ml', stock: 15}], despesasPercentuais: [] },
                 ];
                 vendas = [
                     {id: 1, clienteNome: 'Ana Silva', items: [{produtoId: 1, nome: 'Bolsa Couro Luxo', variation: null, quantidade: 1, precoUnitario: 176}], subtotal: 176, desconto: 10, total: 166, pagamento: 'pix', data: new Date(`${ano}-${mes}-10T10:00:00Z`).toISOString(), status: 'pago' },
@@ -1756,7 +2274,14 @@
                 
                 verificarCustosFixosVencidos();
                 
-                renderizarCustosFixos(); renderizarCustosVariaveis(); renderizarProdutos(); renderizarVendas(); renderizarFluxoDeCaixa(); renderizarDividas();
+                renderizarCustosFixos(); 
+                renderizarCustosVariaveis(); 
+                renderizarProdutos(); 
+                renderizarVendas(); 
+                renderizarFluxoDeCaixa(); 
+                renderizarDividas();
+                renderizarInsumos();
+                renderizarReceitas();
                 popularDropdownDividas();
                 renderizarCardMetaDividas();
                 
